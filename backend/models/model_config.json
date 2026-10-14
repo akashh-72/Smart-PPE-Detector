@@ -1,0 +1,26 @@
+{
+  "model_name": "yolov8n-ppe-detector",
+  "version": "1.2.0",
+  "framework": "ONNXRuntime / Edge-CV Hybrid",
+  "input_size": [
+    640,
+    640
+  ],
+  "confidence_threshold": 0.6,
+  "iou_threshold": 0.45,
+  "classes": [
+    "helmet",
+    "vest",
+    "mask",
+    "gloves",
+    "boots",
+    "person"
+  ],
+  "optimized_for": [
+    "Raspberry Pi 4",
+    "Edge AI",
+    "x86_64",
+    "ARM64"
+  ],
+  "status": "DEPLOYED_ACTIVE"
+}

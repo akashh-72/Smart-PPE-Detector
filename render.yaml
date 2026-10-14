@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: safeguard-ai-gateway
+    runtime: python
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "python run.py"
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: PRODUCTION
+        value: "true"
