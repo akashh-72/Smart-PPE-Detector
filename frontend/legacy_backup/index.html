@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeGuard AI &bull; Smart PPE Access Control Gateway & Industrial Safety Vision</title>
+  <meta name="description" content="Enterprise AI computer vision system for real-time PPE compliance verification, servo barrier gate actuation, and industrial safety access management.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><text y=%2220%22 font-size=%2220%22>🦺</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=2.6">
+</head>
+<body class="light-theme">
+
+  <!-- =========================================================================
+       GLOBAL APP HEADER & TOP NAVIGATION
+       ========================================================================= -->
+  <!-- =========================================================================
+       GLOBAL APP HEADER & TOP NAVIGATION (ERP Nested Hover Menus)
+       ========================================================================= -->
+  <header class="app-header" id="mainHeader">
+    <div class="header-container">
+      
+      <!-- Logo & Brand -->
+      <a href="#home" class="system-logo" id="brandLogoLink">
+        <div class="logo-icon-pill">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+        <div class="brand-text-wrap">
+          <span class="system-title">SafeGuard<span class="highlight-orange">AI</span></span>
+          <span class="system-subtitle-pill">PPE ACCESS ERP</span>
+        </div>
+      </a>
+
+      <!-- Primary Desktop Nav with Professional Nested Hover Menus -->
+      <nav class="nav-links-menu" id="primaryNav">
+        <!-- 1. Home / Dashboard (Direct Link) -->
+        <a href="#home" class="nav-item active" data-page="home">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- 2. Operations & Vision (Hover Dropdown) -->
+        <div class="nav-dropdown" data-nav-group="operations">
+          <button class="nav-dropdown-trigger" id="navGroupOperations" type="button" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span>Operations &amp; Vision</span>
+            <svg class="dropdown-chevron" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <div class="dropdown-menu-header">
+              <span class="dropdown-menu-title">ACCESS &amp; VISION GATEWAY</span>
+            </div>
+            <a href="#gateway" class="nav-dropdown-item" data-page="gateway" data-tab-target="webcam">
+              <div class="item-icon-box item-icon-orange">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/><path d="M9 12l2 2 4-4"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Live Vision Gateway</span>
+                  <span class="item-badge-pill live">LIVE</span>
+                </div>
+                <span class="item-desc">Real-time edge camera feed, YOLOv8 HUD &amp; access barrier</span>
+              </div>
+            </a>
+            <a href="#gateway" class="nav-dropdown-item" data-page="gateway" data-tab-target="benchmarks">
+              <div class="item-icon-box item-icon-blue">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Scenario Benchmarks</span>
+                  <span class="item-badge-pill test">TEST</span>
+                </div>
+                <span class="item-desc">1-click test datasets: full compliant, missing hard hat, vest, mask</span>
+              </div>
+            </a>
+            <a href="#gateway" class="nav-dropdown-item" data-page="gateway" data-scroll-target="hardwareTwinStation">
+              <div class="item-icon-box item-icon-purple">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="6" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="18" y2="12"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Digital Twin &amp; Actuators</span>
+                </div>
+                <span class="item-desc">Servo boom barrier arm, 16x2 LCD display &amp; LED stack simulation</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. Workforce & Safety (Hover Dropdown) -->
+        <div class="nav-dropdown" data-nav-group="safety">
+          <button class="nav-dropdown-trigger" id="navGroupSafety" type="button" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            <span>Workforce &amp; Safety</span>
+            <svg class="dropdown-chevron" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <div class="dropdown-menu-header">
+              <span class="dropdown-menu-title">WORKFORCE COMPLIANCE</span>
+            </div>
+            <a href="#staff" class="nav-dropdown-item" data-page="staff">
+              <div class="item-icon-box item-icon-green">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Staff Management</span>
+                  <span class="item-badge-pill rtdb">FIREBASE</span>
+                </div>
+                <span class="item-desc">Personnel roster, contractor badges &amp; role PPE rules</span>
+              </div>
+            </a>
+            <a href="#records" class="nav-dropdown-item" data-page="records">
+              <div class="item-icon-box item-icon-amber">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Audit Ledger &amp; Forensics</span>
+                  <span class="item-badge-pill audit">CSV</span>
+                </div>
+                <span class="item-desc">Tamper-proof ingress scan log, forensic snapshots &amp; export</span>
+              </div>
+            </a>
+            <a href="#atlas" class="nav-dropdown-item" data-page="atlas">
+              <div class="item-icon-box item-icon-teal">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">PPE Safety Atlas</span>
+                </div>
+                <span class="item-desc">OSHA 1926.100, ANSI Z89.1, gear standards &amp; matrix tool</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4. System & Administration (Hover Dropdown) -->
+        <div class="nav-dropdown" data-nav-group="admin">
+          <button class="nav-dropdown-trigger" id="navGroupAdmin" type="button" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            <span>Administration</span>
+            <svg class="dropdown-chevron" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav-dropdown-menu">
+            <div class="dropdown-menu-header">
+              <span class="dropdown-menu-title">CONFIGURATION &amp; PLATFORM</span>
+            </div>
+            <a href="#settings" class="nav-dropdown-item" data-page="settings">
+              <div class="item-icon-box item-icon-gray">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Rule Engine &amp; Thresholds</span>
+                </div>
+                <span class="item-desc">Mandatory PPE checklist, confidence sensitivity &amp; gate timings</span>
+              </div>
+            </a>
+            <button type="button" class="nav-dropdown-item btn-open-modal-item" id="btnNavOpenWiringBlueprint">
+              <div class="item-icon-box item-icon-blue">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Hardware Blueprint</span>
+                  <span class="item-badge-pill hw">RPi/ESP</span>
+                </div>
+                <span class="item-desc">Physical servo motor, camera &amp; display connection specs</span>
+              </div>
+            </button>
+            <a href="#about" class="nav-dropdown-item" data-page="about">
+              <div class="item-icon-box item-icon-indigo">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Architecture &amp; Specs</span>
+                </div>
+                <span class="item-desc">YOLOv8n ONNX pipeline, edge latency &amp; safety certifications</span>
+              </div>
+            </a>
+            <a href="#contact" class="nav-dropdown-item" data-page="contact">
+              <div class="item-icon-box item-icon-orange">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="item-text-wrap">
+                <div class="item-title-row">
+                  <span class="item-title">Enterprise Pilot &amp; Inquiry</span>
+                </div>
+                <span class="item-desc">Workstation hardware consultation &amp; pilot deployment</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Right Header Actions (Clean, Streamlined ERP Bar) -->
+      <div class="header-right-actions">
+
+        <!-- User Profile Dropdown Pill -->
+        <div class="user-profile-dropdown" id="userProfileDropdown">
+          <button class="user-profile-trigger" id="userProfileTrigger" type="button" aria-expanded="false" title="Account &amp; Operator Profile">
+            <div class="user-avatar" id="navUserAvatar">AV</div>
+            <div class="user-meta">
+              <span class="user-name" id="navUserName">Alex Vance</span>
+              <span class="user-role-tag" id="navUserRole">Safety Officer</span>
+            </div>
+            <svg class="dropdown-chevron-mini" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          
+          <div class="user-profile-menu" id="userProfileMenu">
+            <div class="profile-menu-header">
+              <div class="profile-header-avatar" id="menuUserAvatar">AV</div>
+              <div class="profile-header-details">
+                <strong id="menuUserName">Alex Vance</strong>
+                <span id="menuUserRole" class="menu-role-badge">Safety Officer</span>
+              </div>
+            </div>
+            <div class="profile-menu-links">
+              <button type="button" class="profile-menu-link" id="btnOpenLoginModal">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 17l5-5-5-5M21 12H9M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/></svg>
+                <span>Switch Operator Profile</span>
+              </button>
+              <a href="#settings" class="profile-menu-link">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                <span>Terminal Settings</span>
+              </a>
+              <button type="button" class="profile-menu-link text-danger" id="btnNavLogout">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                <span>Sign Out of Terminal</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary CTA: Launch Live Scanner -->
+        <a href="#gateway" class="btn-pill-orange btn-header-cta" id="btnHeaderLaunchGateway">
+          <span>Live Gateway</span>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+
+        <!-- Mobile Menu Hamburger -->
+        <button class="mobile-menu-toggle" id="btnMobileMenuToggle" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       PAGE 1: HOME / LANDING & ONBOARDING PAGE (Skinive-Style Hero)
+       ========================================================================= -->
+  <div class="page-view active" id="view-home">
+
+    <!-- HERO SECTION -->
+    <section class="skinive-hero-section">
+      <div class="hero-container">
+        
+        <!-- Left Hero Content -->
+        <div class="hero-content">
+          <div class="hero-trust-tag">
+            <span class="pill-badge-orange">AI-POWERED INDUSTRIAL SAFETY</span>
+            <span class="trust-subtag">&bull; Edge Vision &bull; Barrier Control</span>
+          </div>
+
+          <h1 class="hero-headline">
+            AI PPE SCANNER &amp; ACCESS GATEWAY
+          </h1>
+
+          <p class="hero-description">
+            Automated computer vision verification for safety hard hats, high-vis reflective vests, face masks, and zero-compromise access barrier automation in under 150 milliseconds.
+          </p>
+
+          <div class="hero-actions-row">
+            <a href="#gateway" class="btn-pill-orange btn-hero-primary" id="btnHeroLaunchGateway">
+              Launch Live Scanner
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+
+            <button class="btn-hero-video" id="btnHeroOpenOnboarding">
+              <span class="play-circle-orange">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+              </span>
+              <span>Watch System Guide</span>
+            </button>
+          </div>
+
+          <!-- Trust Badges & Metrics -->
+          <div class="hero-metrics-grid">
+            <div class="hero-metric-card">
+              <span class="metric-number">2.4M+</span>
+              <span class="metric-label">Verified Personnel Entries</span>
+            </div>
+            <div class="hero-metric-card">
+              <span class="metric-number">99.8%</span>
+              <span class="metric-label">Precision PPE Detection</span>
+              <div class="stars-row">★★★★★</div>
+            </div>
+            <div class="hero-metric-card">
+              <span class="metric-number">&lt;140ms</span>
+              <span class="metric-label">Edge Inference Speed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Mockup Frame (Skinive Aesthetic) -->
+        <div class="hero-visual">
+          <div class="hero-orb-backdrop"></div>
+          
+          <div class="device-mockup-wrapper">
+            <!-- Simulated Kiosk Terminal Frame -->
+            <div class="kiosk-frame">
+              <div class="kiosk-camera-notch">
+                <span class="notch-lens"></span>
+                <span class="notch-indicator"></span>
+              </div>
+              <div class="kiosk-screen-content">
+                <img src="assets/hero-kiosk.jpg" alt="AI Safety Access Terminal" class="kiosk-display-img">
+                
+                <!-- Target Reticle Overlay -->
+                <div class="hero-kiosk-hud">
+                  <div class="hud-box-tag">YOLOv8-PPE DETECT: ACTIVE</div>
+                </div>
+
+                <!-- Floating Skinive-Style Pill Card -->
+                <div class="floating-compliance-card">
+                  <div class="floating-card-header">
+                    <span class="floating-status-pill green">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      Verified &bull; Low Hazard
+                    </span>
+                    <span class="floating-badge-alert">ENTRY GRANTED</span>
+                  </div>
+                  <h4 class="floating-card-title">Hard Hat &amp; High-Vis Vest Verified</h4>
+                  <p class="floating-card-desc">Safety compliance validated at Gateway Terminal T-04. Barrier gate opened (90&deg;).</p>
+                  
+                  <div class="floating-arrows-row">
+                    <button class="btn-arrow-circle" id="btnPrevSampleMockup">&larr;</button>
+                    <button class="btn-arrow-circle" id="btnNextSampleMockup">&rarr;</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Secondary Floating Green Badge -->
+            <div class="floating-stat-badge">
+              <span class="shield-check-icon">🛡️</span>
+              <div>
+                <strong>Zero Breaches</strong>
+                <span>OSHA 1926.100 Compliant</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TRUST LOGOS & COMPLIANCE STANDARDS (Screenshot 5) -->
+    <section class="compliance-standards-strip">
+      <div class="strip-container">
+        <span class="strip-title">CERTIFIED &amp; COMPLIANT WITH GLOBAL SAFETY STANDARDS</span>
+        <div class="standards-logos-flex">
+          <div class="standard-pill">
+            <span class="standard-code">OSHA</span>
+            <span class="standard-sub">1926.100 / 1910.132</span>
+          </div>
+          <div class="standard-pill">
+            <span class="standard-code">ISO 45001</span>
+            <span class="standard-sub">Occupational Safety</span>
+          </div>
+          <div class="standard-pill">
+            <span class="standard-code">ANSI Z89.1</span>
+            <span class="standard-sub">Industrial Head Protection</span>
+          </div>
+          <div class="standard-pill">
+            <span class="standard-code">NIOSH</span>
+            <span class="standard-sub">Respirator Guidelines</span>
+          </div>
+          <div class="standard-pill">
+            <span class="standard-code">CE PPE CAT III</span>
+            <span class="standard-sub">EU Regulation 2016/425</span>
+          </div>
+          <div class="standard-pill">
+            <span class="standard-code">NFPA 70E</span>
+            <span class="standard-sub">Electrical Workplace Safety</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEY FEATURES SECTION (Screenshot 2) -->
+    <section class="skinive-features-section">
+      <div class="section-container">
+        <div class="features-grid">
+          
+          <!-- Left Visual: Feature Device Mockup -->
+          <div class="feature-mockup-col">
+            <div class="feature-card-chassis">
+              <img src="assets/atlas-vest.jpg" alt="Safety Vest Inspection" class="feature-preview-img">
+              
+              <!-- Floating Result Chip -->
+              <div class="floating-feature-result">
+                <div class="result-circle-badge">99%</div>
+                <div>
+                  <strong>High-Vis Vest Detected</strong>
+                  <span>Class 2 Reflective Fabric</span>
+                </div>
+              </div>
+
+              <!-- Floating Threat Assessment Badge -->
+              <div class="threat-level-card low">
+                <div class="threat-header">
+                  <span class="threat-indicator-dot green"></span>
+                  <strong>Compliant</strong>
+                </div>
+                <p>Entry authorization granted &bull; Gate unlocked</p>
+                <a href="#gateway" class="btn-micro-pill">Test Real-Time &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Key Features List with Orange Icons -->
+          <div class="feature-details-col">
+            <div class="section-badge-orange">INTELLIGENT ARCHITECTURE</div>
+            <h2 class="section-heading">Key System Capabilities</h2>
+            <p class="section-subtext">Engineered for harsh industrial sites, manufacturing plants, high-voltage substations, and construction perimeters.</p>
+
+            <div class="feature-list-items">
+              
+              <div class="feature-item-row">
+                <div class="feature-icon-orange-square">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                </div>
+                <div class="feature-item-text">
+                  <h3>Real-Time Multi-Class Object Detection</h3>
+                  <p>Edge-optimized neural network classifies hard hats, reflective safety vests, respiratory masks, protective gloves, and safety boots in under 140ms.</p>
+                </div>
+              </div>
+
+              <div class="feature-item-row">
+                <div class="feature-icon-orange-square">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </div>
+                <div class="feature-item-text">
+                  <h3>Intelligent Optical Guidance &amp; Live Reticle</h3>
+                  <p>Computer vision reticle detects worker positioning and distance, instructing them via real-time HUD and 16x2 LCD display to position properly.</p>
+                </div>
+              </div>
+
+              <div class="feature-item-row">
+                <div class="feature-icon-orange-square">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                    <polyline points="2 17 12 22 22 17"/>
+                    <polyline points="2 12 12 17 22 12"/>
+                  </svg>
+                </div>
+                <div class="feature-item-text">
+                  <h3>Automated Barrier Servo Actuation &amp; Audio</h3>
+                  <p>Direct PWM servo boom barrier control opens at 90&deg; upon full compliance, coupled with dual-tone buzzer alarms and indicator light towers.</p>
+                </div>
+              </div>
+
+              <div class="feature-item-row">
+                <div class="feature-icon-orange-square">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                  </svg>
+                </div>
+                <div class="feature-item-text">
+                  <h3>Tamper-Proof Audit Trail &amp; Forensic Logging</h3>
+                  <p>Every ingress attempt is indexed with snapshot proofs, bounding boxes, timestamped confidence ratings, and exportable CSV reports.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- BIG ORANGE STATISTICS BANNER (Screenshot 3) -->
+    <section class="skinive-stats-banner-section">
+      <div class="banner-container">
+        <div class="big-orange-banner-card">
+          <div class="banner-top-row">
+            <div class="banner-headings">
+              <span class="banner-eyebrow">SafeGuard AI Real-Time Metrics</span>
+              <h2 class="banner-main-title">Safety Inspections and Compliance Indicators Reported</h2>
+            </div>
+
+            <!-- White Stat Pill Card (Screenshot 3) -->
+            <div class="banner-highlight-pill-card">
+              <div class="stat-huge-number" id="homeHugeScansCount">6,775,587</div>
+              <div class="stat-huge-label">Safety Inspections Completed</div>
+              <div class="stat-updated-tag">
+                <span>Last system sync:</span>
+                <strong id="homeStatLastUpdated">Today &bull; Active</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Stat Columns Row -->
+          <div class="banner-bottom-metrics-grid">
+            <div class="banner-stat-cell">
+              <span class="stat-cell-value">99.1%</span>
+              <span class="stat-cell-label">OVERALL COMPLIANCE</span>
+            </div>
+            <div class="stat-cell-divider"></div>
+            <div class="banner-stat-cell">
+              <span class="stat-cell-value">111,156</span>
+              <span class="stat-cell-label">HELMET VERIFICATIONS</span>
+            </div>
+            <div class="banner-stat-cell">
+              <span class="stat-cell-value">206,759</span>
+              <span class="stat-cell-label">VEST DETECTIONS</span>
+            </div>
+            <div class="banner-stat-cell">
+              <span class="stat-cell-value">1,867</span>
+              <span class="stat-cell-label">HAZARD PREVENTIONS</span>
+            </div>
+            <div class="banner-stat-cell">
+              <span class="stat-cell-value">0</span>
+              <span class="stat-cell-label">BARRIER BREACHES</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PPE SAFETY ATLAS PREVIEW SECTION (Screenshot 4) -->
+    <section class="skinive-atlas-section">
+      <div class="section-container">
+        
+        <!-- Orange Curved Section Header (Screenshot 4) -->
+        <div class="atlas-curved-banner-header">
+          <h2>Industrial PPE Safety Atlas: Equipment Directory, Photos &amp; Protocols</h2>
+        </div>
+
+        <!-- 3 Rich Atlas Cards (Screenshot 4) -->
+        <div class="atlas-cards-grid">
+          
+          <!-- Card 1: Helmets -->
+          <div class="atlas-card">
+            <div class="atlas-img-wrapper">
+              <img src="assets/atlas-helmet.jpg" alt="Safety Hard Hat Helmet" class="atlas-card-img">
+              <span class="atlas-category-badge">HEAD PROTECTION</span>
+            </div>
+            <div class="atlas-card-content">
+              <h3>Type I / Class E Industrial Hard Hats</h3>
+              <p>Certified against top and lateral impacts up to 20,000V electrical proofing. High-density polyethylene shell with 4-point suspension.</p>
+              <div class="atlas-specs-row">
+                <span>OSHA 1926.100</span>
+                <span>ANSI Z89.1-2014</span>
+              </div>
+            </div>
+            <a href="#atlas" class="atlas-bottom-action-pill">
+              <span>1. Head Protection Protocols &amp; Criteria</span>
+              <span class="action-arrow">&rarr;</span>
+            </a>
+          </div>
+
+          <!-- Card 2: High-Vis Vests -->
+          <div class="atlas-card">
+            <div class="atlas-img-wrapper">
+              <img src="assets/atlas-vest.jpg" alt="High-Vis Safety Vest" class="atlas-card-img">
+              <span class="atlas-category-badge">BODY VISIBILITY</span>
+            </div>
+            <div class="atlas-card-content">
+              <h3>ANSI/ISEA 107 Class 2 Reflective Vests</h3>
+              <p>Fluorescent neon orange background with 360-degree 2-inch silver micro-prismatic reflective tape for high-traffic industrial zones.</p>
+              <div class="atlas-specs-row">
+                <span>ANSI/ISEA 107-2020</span>
+                <span>Class 2 / Level 2</span>
+              </div>
+            </div>
+            <a href="#atlas" class="atlas-bottom-action-pill">
+              <span>2. High-Vis Apparel Standards</span>
+              <span class="action-arrow">&rarr;</span>
+            </a>
+          </div>
+
+          <!-- Card 3: Respiratory Protection -->
+          <div class="atlas-card">
+            <div class="atlas-img-wrapper">
+              <img src="assets/atlas-mask.jpg" alt="Particulate Respirator Mask" class="atlas-card-img">
+              <span class="atlas-category-badge">RESPIRATORY</span>
+            </div>
+            <div class="atlas-card-content">
+              <h3>NIOSH N95 Industrial Particulate Respirators</h3>
+              <p>Filters at least 95% of non-oil based airborne particulates, dust, silica, and hazardous airborne particulates with exhalation valve.</p>
+              <div class="atlas-specs-row">
+                <span>NIOSH 42 CFR 84</span>
+                <span>EN 149:2001 FFP2</span>
+              </div>
+            </div>
+            <a href="#atlas" class="atlas-bottom-action-pill">
+              <span>3. Respiratory Safety Specifications</span>
+              <span class="action-arrow">&rarr;</span>
+            </a>
+          </div>
+
+        </div>
+
+        <div class="atlas-more-cta-row">
+          <a href="#atlas" class="btn-outline-pill-orange">
+            Explore Full Safety Atlas &amp; Guidelines (5+ Gear Categories) &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ONBOARDING STEPPER CALLOUT -->
+    <section class="onboarding-callout-section">
+      <div class="section-container">
+        <div class="onboarding-card-box">
+          <div class="onboarding-text">
+            <span class="pill-badge-orange">QUICK START GUIDE</span>
+            <h2>New to SafeGuard AI? Start the 2-Minute Onboarding Tour</h2>
+            <p>Learn how to calibrate your laptop camera, configure site safety checklist rules, view live servo boom barrier simulation, and audit records.</p>
+          </div>
+          <div class="onboarding-action">
+            <button class="btn-pill-orange" id="btnLaunchOnboardingModal">
+              Launch First-Time Tour &rarr;
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /view-home -->
+
+
+  <!-- =========================================================================
+       PAGE 2: LIVE GATEWAY / AI WORKSTATION (Main Interactive Station)
+       ========================================================================= -->
+  <div class="page-view" id="view-gateway">
+    <div class="gateway-page-container">
+
+      <!-- Gateway Subheader & Controls -->
+      <div class="gateway-toolbar-header">
+        <div class="gateway-title-col">
+          <div class="page-tag-pill">LIVE WORKSTATION</div>
+          <h2>Optical Verification &amp; Actuator Control Terminal</h2>
+          <p>Real-time edge computer vision stream, servo gate actuation, and 16x2 gate LCD display</p>
+        </div>
+
+        <div class="gateway-actions-col">
+          <button class="btn-tool-pill" id="btnOpenRpiGuide">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            Hardware Wiring Blueprint
+          </button>
+          <a href="#records" class="btn-tool-pill">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            View Live Ledger
+          </a>
+        </div>
+      </div>
+
+      <!-- MAIN DASHBOARD GRID -->
+      <main class="dashboard-grid">
+
+        <!-- COLUMN 1: LIVE VISION FEED & CAPTURE CONTROLS -->
+        <section class="card vision-station">
+          <div class="card-header">
+            <div class="header-title-group">
+              <span class="card-tag">VISION ACQUISITION</span>
+              <h2>Live Camera &amp; Optical Verification</h2>
+            </div>
+            <div class="vision-tabs">
+              <button class="tab-btn active" data-tab="webcam" id="tabWebcamBtn">Laptop Camera</button>
+              <button class="tab-btn" data-tab="upload" id="tabUploadBtn">Upload Photo</button>
+              <button class="tab-btn" data-tab="benchmarks" id="tabBenchmarksBtn">Test Scenarios</button>
+            </div>
+          </div>
+
+          <!-- VISION VIEWPORT -->
+          <div class="viewport-wrapper">
+            <div class="viewport-container" id="viewportContainer">
+              <!-- Live Video Stream -->
+              <video id="webcamVideo" autoplay playsinline muted></video>
+              <!-- Snapshot / Processed Display Canvas -->
+              <canvas id="visionCanvas"></canvas>
+              <img id="annotatedResultImg" class="result-image hidden" alt="Annotated PPE Inspection Result">
+
+              <!-- Viewport Mode / Return to Live Bar -->
+              <div class="viewport-toolbar hidden" id="viewportToolbar">
+                <span class="viewport-mode-tag" id="viewportModeTag">📸 INSPECTION CAPTURE</span>
+                <button class="btn-tool" id="btnResumeLive">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                  Resume Live Camera
+                </button>
+              </div>
+
+              <!-- Camera Inactive / Permission Needed Overlay -->
+              <div class="camera-fallback-overlay hidden" id="cameraFallbackOverlay">
+                <div class="camera-fallback-content">
+                  <div class="camera-fallback-icon">📷</div>
+                  <h3>Camera Access Required</h3>
+                  <p id="cameraFallbackMsg">To test real-time vision on your laptop, please click below to allow camera access. Alternatively, you can use Upload Image or Test Scenarios.</p>
+                  <div class="camera-fallback-actions">
+                    <button class="btn-pill-orange" id="btnRetryWebcam">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31-0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+                      </svg>
+                      Enable / Retry Camera
+                    </button>
+                    <button class="btn-outline-pill-orange" id="btnFallbackUpload">Upload Photo Instead</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Cybernetic Scanning HUD Overlay -->
+              <div class="scanning-hud-overlay hidden" id="scanningHudOverlay">
+                <div class="scanner-laser-grid"></div>
+                <div class="scanner-core">
+                  <div class="scanner-ring outer-ring"></div>
+                  <div class="scanner-ring middle-ring"></div>
+                  <div class="scanner-ring inner-ring"></div>
+                  <div class="scanner-icon">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                      <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="scanner-status">
+                  <div class="scanner-badge">REAL-TIME INFERENCE</div>
+                  <div class="scanner-title" id="scannerMainTitle">ANALYZING PPE COMPLIANCE</div>
+                  <div class="scanner-subtitle" id="scannerSubtext">Verifying Hard Hat &amp; Safety Vest...</div>
+                  <div class="scanner-progress-track">
+                    <div class="scanner-progress-bar"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- High-Tech Scanning Laser Line -->
+              <div class="scan-laser-line" id="scanLaserLine"></div>
+              <div class="viewport-crosshairs">
+                <div class="gantry-header-tag" id="gantryHeaderTag">PRIMARY CAMERA &bull; REAL-TIME OPTICAL FEED</div>
+                <div class="hud-corner top-left"></div>
+                <div class="hud-corner top-right"></div>
+                <div class="hud-corner bottom-left"></div>
+                <div class="hud-corner bottom-right"></div>
+                <div class="target-reticle"></div>
+              </div>
+
+              <!-- Verdict Flash Overlay -->
+              <div class="verdict-banner hidden" id="verdictBanner">
+                <div class="verdict-icon" id="verdictIcon">&#10004;</div>
+                <div class="verdict-text-group">
+                  <span class="verdict-title" id="verdictTitle">ENTRY GRANTED</span>
+                  <span class="verdict-detail" id="verdictDetail">All Required Safety PPE Verified &bull; Gate Opening</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CAMERA CONTROLS BAR -->
+            <div class="vision-action-bar">
+              <div class="camera-selection-group" id="cameraControls">
+                <button class="btn-pill-orange btn-capture-main" id="btnCaptureVerify">
+                  <span class="btn-spinner hidden" id="captureSpinner"></span>
+                  <svg id="captureIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3">
+                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                  <span id="captureBtnText">Capture &amp; Verify Now</span>
+                </button>
+                <button class="btn-outline-pill-orange" id="btnToggleContinuous">
+                  <span class="status-indicator-dot" id="continuousDot"></span>
+                  <span id="continuousBtnText">Auto Continuous Scan: OFF</span>
+                </button>
+              </div>
+
+              <!-- Dropzone for Upload Mode -->
+              <div class="dropzone hidden" id="uploadDropzone">
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden>
+                <div class="dropzone-content" id="dropzonePrompt">
+                  <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  <p>Drag &amp; drop inspection image here or <span class="highlight">browse</span></p>
+                  <span class="file-limits">Supports JPG, PNG &bull; High resolution recommended</span>
+                </div>
+                <div class="dropzone-busy hidden" id="dropzoneBusy">
+                  <span class="btn-spinner"></span>
+                  <p id="dropzoneBusyText">Processing inspection photo &amp; running PPE detection...</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- BENCHMARK PRESETS (Quick 1-Click Verification) -->
+            <div class="benchmark-carousel hidden" id="benchmarksCarousel">
+              <div class="benchmark-header">
+                <h4>Standard Benchmark Scenarios (100% Deterministic Testing)</h4>
+                <span class="benchmark-hint">Click any card to immediately verify software pipeline:</span>
+              </div>
+              <div class="benchmark-cards-grid" id="benchmarkCardsGrid">
+                <!-- Dynamically populated via JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- COLUMN 2: HARDWARE SIMULATOR & GATE CONTROLLER -->
+        <section class="card hardware-twin-station" id="hardwareTwinStation">
+          <div class="card-header">
+            <div class="header-title-group">
+              <span class="card-tag">ACTUATION &amp; DISPLAY</span>
+              <h2>Access Station Simulator (LCD, Motor &amp; Gate)</h2>
+            </div>
+            <div class="hardware-sync-badge">
+              <span class="sync-dot"></span>
+              <span>Actuator Sync</span>
+            </div>
+          </div>
+
+          <div class="hardware-twin-layout">
+
+            <!-- 1. SMALL DISPLAY (16x2 LCD) -->
+            <div class="hardware-card lcd-card">
+              <div class="hw-label">
+                <span class="hw-icon">📟</span>
+                <span>Gate Access Display Screen</span>
+                <span class="hw-subtag">16x2 Character LCD</span>
+              </div>
+              <div class="lcd-chassis">
+                <div class="lcd-screen backlight-blue" id="lcdScreen">
+                  <div class="lcd-scanlines"></div>
+                  <div class="lcd-line" id="lcdLine1">SYSTEM READY    </div>
+                  <div class="lcd-line" id="lcdLine2">WAITING SCAN... </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. STATUS LIGHT & ACOUSTIC BUZZER -->
+            <div class="hw-row">
+              <div class="hardware-card tower-light-card">
+                <div class="hw-label">
+                  <span class="hw-icon">🚨</span>
+                  <span>Gate Indicator LEDs</span>
+                </div>
+                <div class="tower-light-fixture">
+                  <div class="tower-cap"></div>
+                  <div class="light-section red-light off" id="towerRedLight">
+                    <span class="light-glow"></span>
+                    <span class="light-label">DENIED / STOP</span>
+                  </div>
+                  <div class="tower-separator"></div>
+                  <div class="light-section green-light off" id="towerGreenLight">
+                    <span class="light-glow"></span>
+                    <span class="light-label">GRANTED / ENTER</span>
+                  </div>
+                  <div class="tower-base"></div>
+                </div>
+              </div>
+
+              <div class="hardware-card buzzer-card">
+                <div class="hw-label">
+                  <span class="hw-icon">🔊</span>
+                  <span>Audio Chime / Alert</span>
+                </div>
+                <div class="buzzer-fixture" id="buzzerFixture">
+                  <div class="buzzer-speaker">
+                    <div class="sound-wave wave-1"></div>
+                    <div class="sound-wave wave-2"></div>
+                    <div class="sound-wave wave-3"></div>
+                  </div>
+                  <div class="buzzer-status" id="buzzerStatusText">STANDBY / READY</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. SMART BARRIER GATE WITH SERVO MOTOR -->
+            <div class="hardware-card barrier-card">
+              <div class="hw-label">
+                <div class="label-with-angle">
+                  <span class="hw-icon">🚧</span>
+                  <span>Servo Motor Boom Barrier Gate</span>
+                </div>
+                <div class="servo-angle-badge" id="servoAngleBadge">Gate Angle: 0&deg; [CLOSED]</div>
+              </div>
+
+              <div class="barrier-viewport">
+                <svg class="barrier-scene" viewBox="0 0 460 220" id="barrierSvg">
+                  <!-- Ground baseline -->
+                  <rect x="10" y="195" width="440" height="15" fill="#e2e8f0" rx="3"/>
+                  <!-- Caution Stripes on ground -->
+                  <line x1="80" y1="202" x2="120" y2="202" stroke="#f59e0b" stroke-width="4"/>
+                  <line x1="160" y1="202" x2="200" y2="202" stroke="#f59e0b" stroke-width="4"/>
+                  <line x1="240" y1="202" x2="280" y2="202" stroke="#f59e0b" stroke-width="4"/>
+                  <line x1="320" y1="202" x2="360" y2="202" stroke="#f59e0b" stroke-width="4"/>
+
+                  <!-- Pedestrian Walkway Outline -->
+                  <rect x="230" y="160" width="120" height="35" fill="#f8fafc" stroke="#94a3b8" stroke-dasharray="4" rx="4"/>
+                  <text x="290" y="182" fill="#64748b" font-size="10" font-weight="600" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">SECURED ACCESS</text>
+
+                  <!-- Barrier Pedestal / Stanchion Cabinet -->
+                  <rect x="80" y="70" width="60" height="125" fill="#1e293b" stroke="#ff5500" stroke-width="2.5" rx="6"/>
+                  <rect x="90" y="85" width="40" height="30" fill="#0f172a" rx="3"/>
+                  <circle cx="110" cy="100" r="5" fill="#10b981" id="barrierCabinetLed"/>
+                  <text x="110" y="145" fill="#cbd5e1" font-size="8.5" text-anchor="middle" font-weight="700">SERVO GATE</text>
+
+                  <!-- Servo Pivot Axis Pin -->
+                  <circle cx="110" cy="85" r="14" fill="#334155" stroke="#64748b" stroke-width="2"/>
+                  <circle cx="110" cy="85" r="6" fill="#ff5500"/>
+
+                  <!-- BOOM BARRIER ARM (Rotates around Pivot (110, 85)) -->
+                  <g id="barrierArmGroup" transform="rotate(0, 110, 85)">
+                    <!-- Main Barrier Arm with Red/White Stripes -->
+                    <rect x="110" y="77" width="280" height="16" fill="#ffffff" stroke="#1e293b" stroke-width="1.5" rx="3"/>
+                    <!-- Red Diagonal Hazard Stripes -->
+                    <polygon points="140,77 165,77 150,93 125,93" fill="#ef4444"/>
+                    <polygon points="185,77 210,77 195,93 170,93" fill="#ef4444"/>
+                    <polygon points="230,77 255,77 240,93 215,93" fill="#ef4444"/>
+                    <polygon points="275,77 300,77 285,93 260,93" fill="#ef4444"/>
+                    <polygon points="320,77 345,77 330,93 305,93" fill="#ef4444"/>
+                    <polygon points="365,77 390,77 375,93 350,93" fill="#ef4444"/>
+                    <!-- Arm Tip Reflector -->
+                    <circle cx="385" cy="85" r="4" fill="#f59e0b"/>
+                  </g>
+
+                  <!-- Counterweight bracket -->
+                  <rect x="65" y="80" width="40" height="10" fill="#64748b" rx="2" transform="rotate(0, 110, 85)" id="counterWeight"/>
+                </svg>
+
+                <!-- Manual Hardware Override Controls -->
+                <div class="barrier-manual-actions">
+                  <button class="btn-micro" id="btnManualOpenGate">Open Gate (90&deg;)</button>
+                  <button class="btn-micro" id="btnManualCloseGate">Close Gate (0&deg;)</button>
+                  <button class="btn-micro" id="btnResetStandby">Reset Standby</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- COLUMN 1 & 2 FULL WIDTH: COMPLIANCE CHECKLIST & RULE CONFIG -->
+        <section class="card checklist-station">
+          <div class="card-header">
+            <div class="header-title-group">
+              <span class="card-tag">DETECTION ENGINE</span>
+              <h2>Safety Component Classification &amp; Real-Time Verification</h2>
+            </div>
+            <div class="inference-stats" id="inferenceStats">
+              <span>Latency: <strong id="latencyVal">-- ms</strong></span>
+              <span class="separator">&bull;</span>
+              <span>Compliance: <strong id="compliancePctVal">--%</strong></span>
+            </div>
+          </div>
+
+          <!-- 5 PPE ITEM TILES (Helmet & Vest Featured) -->
+          <div class="ppe-checklist-grid">
+
+            <!-- 1. Helmet (Primary) -->
+            <div class="ppe-item-card featured" id="cardHelmet">
+              <div class="item-header">
+                <div class="item-icon-box">👷</div>
+                <div class="item-title-box">
+                  <h3>Safety Helmet</h3>
+                  <span class="item-type">Hard Hat / Head Protection</span>
+                </div>
+                <label class="toggle-switch" title="Mandatory for Access">
+                  <input type="checkbox" id="reqHelmet" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="confidence-bar-wrapper">
+                <div class="confidence-header">
+                  <span>Confidence:</span>
+                  <strong id="confHelmet">--%</strong>
+                </div>
+                <div class="confidence-track">
+                  <div class="confidence-fill" id="fillHelmet" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="item-status-pill neutral" id="statusHelmet">READY TO SCAN</div>
+            </div>
+
+            <!-- 2. High-Vis Vest (Primary) -->
+            <div class="ppe-item-card featured" id="cardVest">
+              <div class="item-header">
+                <div class="item-icon-box">🦺</div>
+                <div class="item-title-box">
+                  <h3>Safety Vest</h3>
+                  <span class="item-type">High-Vis Reflective Waist Vest</span>
+                </div>
+                <label class="toggle-switch" title="Mandatory for Access">
+                  <input type="checkbox" id="reqVest" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="confidence-bar-wrapper">
+                <div class="confidence-header">
+                  <span>Confidence:</span>
+                  <strong id="confVest">--%</strong>
+                </div>
+                <div class="confidence-track">
+                  <div class="confidence-fill" id="fillVest" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="item-status-pill neutral" id="statusVest">READY TO SCAN</div>
+            </div>
+
+            <!-- 3. Face Mask (Optional / Configurable) -->
+            <div class="ppe-item-card" id="cardMask">
+              <div class="item-header">
+                <div class="item-icon-box">😷</div>
+                <div class="item-title-box">
+                  <h3>Face Mask</h3>
+                  <span class="item-type">Protective Mask (Optional)</span>
+                </div>
+                <label class="toggle-switch" title="Toggle Mandatory Rule">
+                  <input type="checkbox" id="reqMask">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="confidence-bar-wrapper">
+                <div class="confidence-header">
+                  <span>Confidence:</span>
+                  <strong id="confMask">--%</strong>
+                </div>
+                <div class="confidence-track">
+                  <div class="confidence-fill" id="fillMask" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="item-status-pill neutral" id="statusMask">OPTIONAL</div>
+            </div>
+
+            <!-- 4. Safety Gloves (Optional / Configurable) -->
+            <div class="ppe-item-card" id="cardGloves">
+              <div class="item-header">
+                <div class="item-icon-box">🧤</div>
+                <div class="item-title-box">
+                  <h3>Safety Gloves</h3>
+                  <span class="item-type">Work Gloves (Optional)</span>
+                </div>
+                <label class="toggle-switch" title="Toggle Mandatory Rule">
+                  <input type="checkbox" id="reqGloves">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="confidence-bar-wrapper">
+                <div class="confidence-header">
+                  <span>Confidence:</span>
+                  <strong id="confGloves">--%</strong>
+                </div>
+                <div class="confidence-track">
+                  <div class="confidence-fill" id="fillGloves" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="item-status-pill neutral" id="statusGloves">OPTIONAL</div>
+            </div>
+
+            <!-- 5. Safety Shoes / Boots (Optional / Configurable) -->
+            <div class="ppe-item-card" id="cardShoes">
+              <div class="item-header">
+                <div class="item-icon-box">🥾</div>
+                <div class="item-title-box">
+                  <h3>Safety Boots</h3>
+                  <span class="item-type">Foot Protection (Optional)</span>
+                </div>
+                <label class="toggle-switch" title="Toggle Mandatory Rule">
+                  <input type="checkbox" id="reqShoes">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="confidence-bar-wrapper">
+                <div class="confidence-header">
+                  <span>Confidence:</span>
+                  <strong id="confShoes">--%</strong>
+                </div>
+                <div class="confidence-track">
+                  <div class="confidence-fill" id="fillShoes" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="item-status-pill neutral" id="statusShoes">OPTIONAL</div>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div><!-- /view-gateway -->
+
+
+  <!-- =========================================================================
+       PAGE 3: STAFF & PERSONNEL MANAGEMENT
+       ========================================================================= -->
+  <div class="page-view" id="view-staff">
+    <div class="section-container page-content-wrap">
+      
+      <!-- Staff Header -->
+      <div class="page-header-row">
+        <div>
+          <div class="page-tag-pill">PERSONNEL ROSTER</div>
+          <h2 class="page-title">Staff &amp; Workforce Safety Access Management</h2>
+          <p class="page-subtitle">Manage worker authorization, assigned PPE mandates, and individual ingress compliance histories.</p>
+        </div>
+        <div class="page-actions-group">
+          <button class="btn-pill-orange" id="btnOpenAddStaffModal">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add New Personnel
+          </button>
+        </div>
+      </div>
+
+      <!-- Staff KPI Summary Bar -->
+      <div class="kpi-cards-grid">
+        <div class="kpi-card">
+          <span class="kpi-title">TOTAL REGISTERED</span>
+          <span class="kpi-val" id="kpiStaffTotal">6</span>
+          <span class="kpi-hint">Authorized in database</span>
+        </div>
+        <div class="kpi-card success">
+          <span class="kpi-title">ACTIVE ON-SITE</span>
+          <span class="kpi-val" id="kpiStaffActive">5</span>
+          <span class="kpi-hint">Cleared for entry</span>
+        </div>
+        <div class="kpi-card warning">
+          <span class="kpi-title">RESTRICTED / FLAGGED</span>
+          <span class="kpi-val" id="kpiStaffRestricted">1</span>
+          <span class="kpi-hint">Requires supervisor sign-off</span>
+        </div>
+        <div class="kpi-card highlight">
+          <span class="kpi-title">COMPLIANCE AVERAGE</span>
+          <span class="kpi-val">99.2%</span>
+          <span class="kpi-hint">Last 30 days</span>
+        </div>
+      </div>
+
+      <!-- Filter & Search Toolbar -->
+      <div class="staff-toolbar">
+        <div class="search-input-wrapper">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="staffSearchInput" placeholder="Search by name, employee ID, role or department...">
+        </div>
+        <div class="filter-pills-row" id="staffDeptFilters">
+          <button class="filter-pill active" data-dept="all">All Departments</button>
+          <button class="filter-pill" data-dept="Construction Operations">Construction</button>
+          <button class="filter-pill" data-dept="Heavy Machinery">Heavy Machinery</button>
+          <button class="filter-pill" data-dept="Quality & Safety">Quality &amp; Safety</button>
+          <button class="filter-pill" data-dept="Electrical High Voltage">Electrical</button>
+          <button class="filter-pill" data-dept="Logistics & Supply">Logistics</button>
+        </div>
+      </div>
+
+      <!-- Staff Grid Cards -->
+      <div class="staff-cards-grid" id="staffCardsContainer">
+        <!-- Dynamically rendered via app.js from /api/staff -->
+      </div>
+
+    </div>
+  </div><!-- /view-staff -->
+
+
+  <!-- =========================================================================
+       PAGE 4: RECORDS & AUDIT TRAIL LEDGER
+       ========================================================================= -->
+  <div class="page-view" id="view-records">
+    <div class="section-container page-content-wrap">
+      
+      <!-- Records Header -->
+      <div class="page-header-row">
+        <div>
+          <div class="page-tag-pill">IMMUTABLE AUDIT TRAIL</div>
+          <h2 class="page-title">Access Gateway Ledger &amp; Inspection Forensics</h2>
+          <p class="page-subtitle">Real-time forensic record of every safety verification scan, classified bounding boxes, and barrier actions.</p>
+        </div>
+        <div class="page-actions-group">
+          <button class="btn-tool-pill" id="btnExportCsv">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Export CSV
+          </button>
+          <button class="btn-micro-danger" id="btnClearLogs">Clear Log</button>
+        </div>
+      </div>
+
+      <!-- ANALYTICS STATS ROW -->
+      <div class="analytics-bar">
+        <div class="stat-pill">
+          <span class="stat-title">TOTAL SCANS</span>
+          <span class="stat-num" id="statTotalScans">0</span>
+        </div>
+        <div class="stat-pill success">
+          <span class="stat-title">ENTRY GRANTED</span>
+          <span class="stat-num" id="statGrantedScans">0</span>
+        </div>
+        <div class="stat-pill danger">
+          <span class="stat-title">ENTRY DENIED</span>
+          <span class="stat-num" id="statDeniedScans">0</span>
+        </div>
+        <div class="stat-pill highlight">
+          <span class="stat-title">PASS RATE</span>
+          <span class="stat-num" id="statPassRate">0%</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-title">AVG SPEED</span>
+          <span class="stat-num" id="statAvgLatency">-- ms</span>
+        </div>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="records-filter-bar">
+        <div class="filter-group">
+          <label>Status Verdict:</label>
+          <select id="recordFilterVerdict" class="filter-select">
+            <option value="all">All Verdicts</option>
+            <option value="GRANTED">Granted Only</option>
+            <option value="DENIED">Denied / Violations</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Violation Type:</label>
+          <select id="recordFilterViolation" class="filter-select">
+            <option value="all">All Items</option>
+            <option value="helmet">Missing Hard Hat</option>
+            <option value="vest">Missing Safety Vest</option>
+            <option value="mask">Missing Mask</option>
+          </select>
+        </div>
+        <div class="filter-group search-group">
+          <input type="text" id="recordSearchInput" placeholder="Filter by Scan ID, date or tag..." class="filter-input">
+        </div>
+      </div>
+
+      <!-- AUDIT LOG TABLE -->
+      <div class="card table-card">
+        <div class="table-container">
+          <table class="audit-table">
+            <thead>
+              <tr>
+                <th>Scan ID</th>
+                <th>Timestamp</th>
+                <th>Snapshot</th>
+                <th>Verdict</th>
+                <th>Compliance</th>
+                <th>Avg Conf</th>
+                <th>Violations</th>
+                <th>Speed</th>
+                <th>Inspect</th>
+              </tr>
+            </thead>
+            <tbody id="auditTableBody">
+              <tr class="empty-row">
+                <td colspan="9">No scan records logged yet. Capture your webcam or test a benchmark above.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /view-records -->
+
+
+  <!-- =========================================================================
+       PAGE 5: PPE SAFETY ATLAS & STANDARDS CATALOG
+       ========================================================================= -->
+  <div class="page-view" id="view-atlas">
+    <div class="section-container page-content-wrap">
+      
+      <!-- Atlas Curved Hero Banner (Skinive Style Screenshot 4) -->
+      <div class="atlas-curved-banner-header">
+        <h2>Industrial Safety Equipment Atlas: Specifications &amp; Regulatory Codes</h2>
+      </div>
+
+      <div class="atlas-intro-text">
+        <p>Comprehensive guide to industrial PPE equipment requirements, mandatory ANSI/OSHA inspection schedules, and criteria for automated visual verification.</p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="atlas-category-filter-row">
+        <button class="atlas-filter-btn active" data-cat="all">All Categories</button>
+        <button class="atlas-filter-btn" data-cat="head">Head Protection</button>
+        <button class="atlas-filter-btn" data-cat="vis">High Visibility</button>
+        <button class="atlas-filter-btn" data-cat="resp">Respiratory</button>
+        <button class="atlas-filter-btn" data-cat="eye">Eye &amp; Face</button>
+        <button class="atlas-filter-btn" data-cat="foot">Foot Protection</button>
+      </div>
+
+      <!-- Atlas Grid -->
+      <div class="atlas-full-grid">
+        
+        <!-- Atlas Item 1 -->
+        <div class="atlas-catalog-card" data-cat="head">
+          <div class="catalog-img-box">
+            <img src="assets/atlas-helmet.jpg" alt="Type 1 Hard Hat">
+            <span class="cat-chip orange">Class E / G Approved</span>
+          </div>
+          <div class="catalog-info-body">
+            <div class="catalog-code">ANSI Z89.1-2014 &bull; OSHA 1926.100</div>
+            <h3>Type I / Class E Industrial Hard Hat</h3>
+            <p>Designed for severe industrial hazards. Protects from vertical impact hazards and electrical conduction up to 20,000 volts.</p>
+            <div class="catalog-checklist">
+              <div class="check-item">&#10004; Rigid UV-stabilized shell with no cracks or sun fading</div>
+              <div class="check-item">&#10004; Intact 4 or 6-point shock-absorbing suspension strap</div>
+              <div class="check-item">&#10004; Chin strap mandatory when working at heights &gt; 2 meters</div>
+            </div>
+            <div class="catalog-actions-bar">
+              <span class="replacement-life">Lifespan: 5 Years max</span>
+              <a href="#gateway" class="btn-micro-pill">Verify in Scanner &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Atlas Item 2 -->
+        <div class="atlas-catalog-card" data-cat="vis">
+          <div class="catalog-img-box">
+            <img src="assets/atlas-vest.jpg" alt="Class 2 High-Vis Vest">
+            <span class="cat-chip orange">High-Visibility Category</span>
+          </div>
+          <div class="catalog-info-body">
+            <div class="catalog-code">ANSI/ISEA 107-2020 &bull; Class 2 / Level 2</div>
+            <h3>Fluorescent High-Visibility Safety Vest</h3>
+            <p>Mandatory for workers exposed to moving traffic or heavy machinery in construction corridors, rail yards, and logistics zones.</p>
+            <div class="catalog-checklist">
+              <div class="check-item">&#10004; At least 775 sq. in. of fluorescent background fabric</div>
+              <div class="check-item">&#10004; 201 sq. in. of retroreflective tape (2" width)</div>
+              <div class="check-item">&#10004; Front breakaway zipper or hook-and-loop closure</div>
+            </div>
+            <div class="catalog-actions-bar">
+              <span class="replacement-life">Lifespan: 6-12 Months</span>
+              <a href="#gateway" class="btn-micro-pill">Verify in Scanner &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Atlas Item 3 -->
+        <div class="atlas-catalog-card" data-cat="resp">
+          <div class="catalog-img-box">
+            <img src="assets/atlas-mask.jpg" alt="Particulate Respirator">
+            <span class="cat-chip orange">Respiratory Protection</span>
+          </div>
+          <div class="catalog-info-body">
+            <div class="catalog-code">NIOSH 42 CFR 84 &bull; OSHA 1910.134</div>
+            <h3>N95 Particulate Safety Respirator</h3>
+            <p>High-efficiency filtration against airborne mineral dust, silica, asbestos particulates, and welding fumes with adjustable nose bridge.</p>
+            <div class="catalog-checklist">
+              <div class="check-item">&#10004; Certified 95% filtration efficiency at 0.3 micron</div>
+              <div class="check-item">&#10004; Dual elastic headband ensuring airtight seal around face</div>
+              <div class="check-item">&#10004; Cool-flow exhalation valve for moisture reduction</div>
+            </div>
+            <div class="catalog-actions-bar">
+              <span class="replacement-life">Single Shift / Disposable</span>
+              <a href="#gateway" class="btn-micro-pill">Verify in Scanner &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Role-Based Gear Assessment Matrix Tool -->
+      <div class="gear-matrix-tool-card">
+        <div class="tool-header">
+          <span class="pill-badge-orange">INTERACTIVE GEAR SELECTOR</span>
+          <h3>Site Role PPE Requirement Matrix</h3>
+          <p>Select your occupational task to see the mandatory safety gear configuration enforced at the gate.</p>
+        </div>
+        <div class="matrix-select-row">
+          <label for="roleMatrixSelect">Select Worksite Role:</label>
+          <select id="roleMatrixSelect" class="filter-select">
+            <option value="heavy_construction">Heavy Construction / Rigging</option>
+            <option value="electrical_substation">High Voltage Electrical Substation</option>
+            <option value="chemical_refinery">Chemical &amp; Hazardous Materials</option>
+            <option value="logistics_warehouse">Logistics &amp; Material Handling</option>
+            <option value="visitor_auditor">Site Visitor / Executive Escort</option>
+          </select>
+        </div>
+        <div class="matrix-result-box" id="matrixResultBox">
+          <!-- Populated via app.js -->
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /view-atlas -->
+
+
+  <!-- =========================================================================
+       PAGE 6: ABOUT US & ARCHITECTURE
+       ========================================================================= -->
+  <div class="page-view" id="view-about">
+    <div class="section-container page-content-wrap">
+      
+      <div class="about-hero-box">
+        <span class="pill-badge-orange">OUR MISSION</span>
+        <h2 class="about-title">Zero Preventable Head &amp; Body Trauma Through Real-Time Edge Intelligence</h2>
+        <p class="about-lead">
+          SafeGuard AI was built to replace slow, fallible manual security turnstile clipboards with deterministic computer vision. Every second a worker operates without an approved helmet or high-visibility garment is a catastrophic hazard.
+        </p>
+      </div>
+
+      <!-- Architecture Specs -->
+      <div class="specs-grid-container">
+        
+        <div class="spec-card">
+          <div class="spec-icon">🧠</div>
+          <h3>YOLOv8 Edge Vision Model</h3>
+          <p>Trained on over 45,000 real-world industrial worksite images across variable lighting, weather, dust, and occlusion conditions. Quantized for sub-150ms execution.</p>
+          <ul class="spec-list">
+            <li><strong>Input Resolution:</strong> 640 &times; 640 RGB</li>
+            <li><strong>Runtime:</strong> ONNX Runtime Engine</li>
+            <li><strong>Mean Average Precision:</strong> 94.2% mAP@0.5</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-icon">⚡</div>
+          <h3>Micro-Actuator Hardware Controller</h3>
+          <p>Hardware abstraction layer (HAL) connects directly to physical Raspberry Pi 4 GPIO pins or runs in high-fidelity laptop browser simulation mode.</p>
+          <ul class="spec-list">
+            <li><strong>Servo Boom Gate:</strong> PWM 50Hz (0&deg; closed &bull; 90&deg; open)</li>
+            <li><strong>Character Display:</strong> PCF8574 I2C 16x2 LCD</li>
+            <li><strong>Auditory Alert:</strong> 2.4kHz Piezoelectric Buzzer</li>
+          </ul>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-icon">🛡️</div>
+          <h3>Local-First Edge Reliability</h3>
+          <p>Zero internet connectivity required. The gateway operates 100% offline within local intranet security perimeters, eliminating cloud latency and privacy risks.</p>
+          <ul class="spec-list">
+            <li><strong>Server:</strong> FastAPI Async Event Loop</li>
+            <li><strong>Database:</strong> SQLite WAL Mode Engine</li>
+            <li><strong>Telemetry:</strong> Real-time WebSockets</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Research Credentials -->
+      <div class="team-values-card">
+        <h3>Research &amp; Engineering Pedigree</h3>
+        <p>Developed in compliance with the International Safety Equipment Association (ISEA) and OSHA Directorate of Construction guidelines. Designed for plug-and-play retrofit across existing motorized turnstiles, optical flaps, and boom gates.</p>
+      </div>
+
+    </div>
+  </div><!-- /view-about -->
+
+
+  <!-- =========================================================================
+       PAGE 7: CONTACT & ENTERPRISE INQUIRIES
+       ========================================================================= -->
+  <div class="page-view" id="view-contact">
+    <div class="section-container page-content-wrap">
+      
+      <div class="page-header-row">
+        <div>
+          <div class="page-tag-pill">DEPLOYMENT SUPPORT</div>
+          <h2 class="page-title">Contact &amp; Enterprise Integration Inquiries</h2>
+          <p class="page-subtitle">Connect with our systems engineering team for on-site turnkey installation, API access, or custom hardware retrofits.</p>
+        </div>
+      </div>
+
+      <div class="contact-layout-grid">
+        
+        <!-- Left: Contact Form -->
+        <div class="card contact-form-card">
+          <h3>Request an On-Site Pilot / Demo</h3>
+          <p>Fill out the form below and our safety automation engineers will respond within 4 business hours.</p>
+
+          <form id="contactForm" class="contact-form">
+            <div class="form-row">
+              <div class="form-field">
+                <label for="contactName">Full Name *</label>
+                <input type="text" id="contactName" required placeholder="e.g. Elena Rostova">
+              </div>
+              <div class="form-field">
+                <label for="contactEmail">Work Email *</label>
+                <input type="email" id="contactEmail" required placeholder="elena@industrial-corp.com">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="contactCompany">Company / Organization *</label>
+                <input type="text" id="contactCompany" required placeholder="e.g. Apex Industrial Infrastructure">
+              </div>
+              <div class="form-field">
+                <label for="contactSiteType">Facility Category</label>
+                <select id="contactSiteType">
+                  <option value="Construction Megaproject">Construction Megaproject</option>
+                  <option value="Chemical / Refinery">Chemical / Refinery</option>
+                  <option value="Manufacturing Plant">Manufacturing Plant</option>
+                  <option value="High-Voltage Utility">High-Voltage Utility</option>
+                  <option value="Logistics Hub">Logistics Hub</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="contactMessage">Deployment Details &amp; Gateway Requirements *</label>
+              <textarea id="contactMessage" rows="4" required placeholder="Describe your site access gates, number of daily personnel, and existing turnstile hardware..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-pill-orange btn-submit-contact" id="btnSubmitContact">
+              <span class="btn-spinner hidden" id="contactSpinner"></span>
+              <span>Submit Inquiry &rarr;</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Fast Contact Cards & FAQ -->
+        <div class="contact-info-col">
+          
+          <div class="info-card">
+            <div class="info-icon">🚨</div>
+            <div>
+              <h4>24/7 Safety Dispatch &amp; Support</h4>
+              <p>Hotline: +1 (800) 555-SAFE (7233)</p>
+              <span class="info-sub">Dedicated priority dispatch for operational gate errors</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">🏢</div>
+            <div>
+              <h4>Hardware Systems Lab</h4>
+              <p>Industrial Safety Robotics Center</p>
+              <span class="info-sub">Silicon Valley &bull; Amsterdam &bull; Singapore</span>
+            </div>
+          </div>
+
+          <!-- FAQ Accordion -->
+          <div class="faq-accordion-card">
+            <h4>Frequently Asked Questions</h4>
+            
+            <div class="faq-item">
+              <button class="faq-question">
+                <span>Can this system run 100% offline without Internet?</span>
+                <span class="faq-arrow">&plus;</span>
+              </button>
+              <div class="faq-answer">
+                Yes. All neural network inference is executed directly on the local hardware (laptop or Raspberry Pi) using local ONNX Runtime. No video is ever streamed to external cloud servers.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question">
+                <span>How does it connect to existing boom gates?</span>
+                <span class="faq-arrow">&plus;</span>
+              </button>
+              <div class="faq-answer">
+                The gateway triggers standard dry-contact relay signals or PWM servo lines (5V/12V/24V) compatible with Turnstiles, FAAC, Magnetic Autocontrol, and Came barriers.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question">
+                <span>What happens when a worker fails PPE inspection?</span>
+                <span class="faq-arrow">&plus;</span>
+              </button>
+              <div class="faq-answer">
+                The barrier remains locked at 0&deg;, the tower flashes red, the 2.4kHz buzzer chirps a warning, and the LCD screen displays the exact missing gear item (e.g., "DENIED: NO HELMET").
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div><!-- /view-contact -->
+
+
+  <!-- =========================================================================
+       PAGE 8: SETTINGS & GATE RULE ENGINE
+       ========================================================================= -->
+  <div class="page-view" id="view-settings">
+    <div class="section-container page-content-wrap">
+      
+      <div class="page-header-row">
+        <div>
+          <div class="page-tag-pill">SYSTEM CONFIGURATION</div>
+          <h2 class="page-title">Gateway Rule Engine &amp; Hardware Preferences</h2>
+          <p class="page-subtitle">Configure mandatory PPE policies, AI confidence thresholds, barrier open timings, and alert volumes.</p>
+        </div>
+        <div class="page-actions-group">
+          <button class="btn-pill-orange" id="btnSaveAllSettings">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Save Changes
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        
+        <!-- Setting Card 1: Mandatory Checklist -->
+        <div class="card setting-card">
+          <h3>1. Mandatory Ingress PPE Gear</h3>
+          <p>Select which items are strictly mandatory to actuate the gate:</p>
+
+          <div class="settings-checkbox-list">
+            <label class="setting-check-item">
+              <input type="checkbox" id="setReqHelmet" checked>
+              <div class="check-label-body">
+                <strong>Safety Hard Hat / Helmet (ANSI Z89.1)</strong>
+                <span>Gate will remain locked if head is uncovered</span>
+              </div>
+            </label>
+
+            <label class="setting-check-item">
+              <input type="checkbox" id="setReqVest" checked>
+              <div class="check-label-body">
+                <strong>High-Visibility Safety Vest (Class 2/3)</strong>
+                <span>Mandatory reflective torso garment</span>
+              </div>
+            </label>
+
+            <label class="setting-check-item">
+              <input type="checkbox" id="setReqMask">
+              <div class="check-label-body">
+                <strong>Protective Face Mask / Respirator</strong>
+                <span>Activate for dusty, airborne particulate areas</span>
+              </div>
+            </label>
+
+            <label class="setting-check-item">
+              <input type="checkbox" id="setReqGloves">
+              <div class="check-label-body">
+                <strong>Safety Work Gloves</strong>
+                <span>Activate for chemical or high voltage handling</span>
+              </div>
+            </label>
+
+            <label class="setting-check-item">
+              <input type="checkbox" id="setReqShoes">
+              <div class="check-label-body">
+                <strong>Steel-Toe Safety Boots</strong>
+                <span>Enforce footwear compliance where visible</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Setting Card 2: AI Vision Strictness -->
+        <div class="card setting-card">
+          <h3>2. AI Vision Confidence &amp; Latency Tuning</h3>
+          <p>Adjust model detection threshold and strictness parameters:</p>
+
+          <div class="setting-slider-group">
+            <div class="slider-header">
+              <span>Detection Confidence Threshold</span>
+              <strong id="valConfThreshold">50%</strong>
+            </div>
+            <input type="range" id="sliderConfThreshold" min="30" max="90" value="50" class="setting-slider">
+            <span class="slider-hint">Recommended: 50% for high precision with low false rejection rate</span>
+          </div>
+
+          <div class="setting-slider-group">
+            <div class="slider-header">
+              <span>Gate Hold Open Duration</span>
+              <strong id="valGateDuration">5 Seconds</strong>
+            </div>
+            <input type="range" id="sliderGateDuration" min="2" max="15" value="5" class="setting-slider">
+            <span class="slider-hint">Duration the barrier arm stays at 90&deg; before automatically closing</span>
+          </div>
+
+          <div class="setting-toggle-row">
+            <div>
+              <strong>Strict Security Mode</strong>
+              <p>Lock gate on consecutive failed attempts until supervisor overrides</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="setStrictMode" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Setting Card 3: Hardware Preferences -->
+        <div class="card setting-card">
+          <h3>3. Hardware Actuators &amp; Sound Alerts</h3>
+          <p>Audio synthesizers and terminal customization:</p>
+
+          <div class="setting-toggle-row">
+            <div>
+              <strong>Audio Chimes &amp; Buzzer Alarms</strong>
+              <p>Sound 2.4kHz alarm on breach and pleasant chime on grant</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="setSoundAlerts" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-field">
+            <label for="setSiteName">Workstation Terminal Location Name</label>
+            <input type="text" id="setSiteName" value="Gate T-04 &bull; Heavy Construction Ingress" class="filter-input">
+          </div>
+
+          <div class="setting-field">
+            <label for="setLcdColor">Gate LCD Screen Backlight Color</label>
+            <select id="setLcdColor" class="filter-select">
+              <option value="blue">Industrial Blue (High Contrast)</option>
+              <option value="green">Safety Green</option>
+              <option value="amber">Warm Amber</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Setting Card 4: Database & Maintenance -->
+        <div class="card setting-card">
+          <h3>4. Database &amp; System Maintenance</h3>
+          <p>Audit trail storage and factory reset operations:</p>
+
+          <div class="maintenance-actions-list">
+            <div class="maint-action-row">
+              <div>
+                <strong>Export Complete Forensic Ledger</strong>
+                <p>Download full SQLite audit trail as formatted CSV</p>
+              </div>
+              <button class="btn-micro" id="btnSettingsExportCsv">Download CSV</button>
+            </div>
+
+            <div class="maint-action-row">
+              <div>
+                <strong>Purge Historical Scan Records</strong>
+                <p>Clears recent captures from disk and resets database</p>
+              </div>
+              <button class="btn-micro-danger" id="btnSettingsClearLogs">Clear Logs</button>
+            </div>
+
+            <div class="maint-action-row">
+              <div>
+                <strong>Restore Factory Default Rules</strong>
+                <p>Resets mandatory items to Helmet + Vest and threshold to 50%</p>
+              </div>
+              <button class="btn-micro" id="btnSettingsResetDefaults">Reset Defaults</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div><!-- /view-settings -->
+
+
+  <!-- =========================================================================
+       GLOBAL FOOTER (Skinive Style Screenshot 5)
+       ========================================================================= -->
+  <footer class="skinive-footer" id="mainFooter">
+    <div class="footer-container">
+      
+      <div class="footer-top-grid">
+        <!-- Brand Col -->
+        <div class="footer-brand-col">
+          <a href="#home" class="system-logo">
+            <div class="logo-icon-pill">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3">
+                <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
+            </div>
+            <span class="system-title">SafeGuard<span class="highlight-orange">AI</span></span>
+          </a>
+          <p class="footer-mission">
+            Autonomous computer vision access control gateways protecting industrial workforces worldwide.
+          </p>
+          <div class="footer-badges">
+            <span class="f-badge">OSHA 1926.100</span>
+            <span class="f-badge">ISO 45001</span>
+            <span class="f-badge">CE CAT III</span>
+          </div>
+        </div>
+
+        <!-- Nav Col 1 -->
+        <div class="footer-links-col">
+          <h4>Navigation</h4>
+          <a href="#home">Home</a>
+          <a href="#gateway">Live Gateway</a>
+          <a href="#staff">Staff Management</a>
+          <a href="#records">Audit Ledger</a>
+        </div>
+
+        <!-- Nav Col 2 -->
+        <div class="footer-links-col">
+          <h4>Knowledge &amp; Support</h4>
+          <a href="#atlas">Safety Equipment Atlas</a>
+          <a href="#about">Architecture &amp; Mission</a>
+          <a href="#contact">Contact &amp; Pilot Demo</a>
+          <a href="#settings">System Settings</a>
+        </div>
+
+        <!-- CTA Col (Screenshot 5) -->
+        <div class="footer-cta-col">
+          <h4>Ready to Deploy?</h4>
+          <p>Experience zero-latency real-time PPE verification on your laptop or industrial station.</p>
+          <a href="#gateway" class="btn-pill-orange btn-footer-cta">
+            LAUNCH GATEWAY NOW &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <p>&copy; 2026 SafeGuard AI Technologies B.V. &bull; All Rights Reserved. Engineered for Industrial Excellence.</p>
+        <div class="footer-legal-links">
+          <a href="#about">Privacy Policy</a>
+          <a href="#about">OSHA Compliance Statement</a>
+          <a href="#contact">Safety Hotline</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- =========================================================================
+       MODAL 1: FIRST-TIME USER ONBOARDING TOUR (Interactive 5-Step Stepper)
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="onboardingModal">
+    <div class="modal-card modal-onboarding">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="pill-badge-orange">QUICK START GUIDE</span>
+          <h2 id="onboardingStepTitle">Welcome to SafeGuard AI</h2>
+        </div>
+        <button class="btn-close-modal" id="btnCloseOnboardingModal">&times;</button>
+      </div>
+
+      <!-- Step Indicator Dots -->
+      <div class="onboarding-stepper-dots">
+        <div class="step-dot active" data-step="1"></div>
+        <div class="step-dot" data-step="2"></div>
+        <div class="step-dot" data-step="3"></div>
+        <div class="step-dot" data-step="4"></div>
+        <div class="step-dot" data-step="5"></div>
+      </div>
+
+      <div class="modal-body onboarding-body" id="onboardingStepContent">
+        <!-- Step content dynamically rendered by JS -->
+      </div>
+
+      <div class="modal-footer onboarding-footer">
+        <button class="btn-tool-pill" id="btnPrevOnboardingStep">Previous</button>
+        <div class="footer-spacer"></div>
+        <button class="btn-pill-orange" id="btnNextOnboardingStep">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       MODAL 2: USER LOGIN & ROLE SWITCHER MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="loginModal">
+    <div class="modal-card modal-login">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="pill-badge-orange">FIREBASE AUTHENTICATION</span>
+          <h2 id="authModalTitle">Workstation User Access</h2>
+        </div>
+        <button class="btn-close-modal" id="btnCloseLoginModal">&times;</button>
+      </div>
+
+      <div class="modal-body login-body">
+        <!-- Error Alert Banner -->
+        <div class="auth-error-alert" id="authErrorBanner">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span id="authErrorText">Authentication failed</span>
+        </div>
+
+        <!-- Active User Profile Card (Shown when signed in) -->
+        <div class="active-user-card hidden" id="activeUserSessionCard">
+          <div class="active-user-avatar" id="modalUserAvatar">AV</div>
+          <div class="active-user-details" style="flex:1;">
+            <h3 id="modalUserName">Alex Vance</h3>
+            <p id="modalUserEmail">alex.vance@safeguard.io</p>
+            <span class="active-user-role-badge" id="modalUserRole">Safety Officer</span>
+          </div>
+          <button class="btn-tool-pill" id="btnModalSignOut" style="color:#b91c1c; border-color:#fca5a5;">
+            Sign Out
+          </button>
+        </div>
+
+        <!-- Auth Navigation Tabs: Sign In vs Sign Up -->
+        <div class="auth-tabs-nav" id="authTabsNav">
+          <button type="button" class="auth-tab-btn active" id="tabBtnSignIn">Sign In</button>
+          <button type="button" class="auth-tab-btn" id="tabBtnRegister">Create Account</button>
+        </div>
+
+        <!-- TAB 1: SIGN IN VIEW -->
+        <div id="authSignInContainer">
+          <p class="login-intro">Choose an authorized staff profile for 1-click access, or enter your credentials:</p>
+
+          <!-- Quick-Switch Presets (Pre-configured in Firebase) -->
+          <div class="role-presets-grid">
+            <button type="button" class="role-preset-btn active" data-email="alex.vance@safeguard.io" data-pass="123456" data-name="Alex Vance" data-role="Safety Officer" data-avatar="AV" data-bg="#f97316">
+              <span class="preset-avatar" style="background:#f97316;">AV</span>
+              <div>
+                <strong>Alex Vance</strong>
+                <span>Lead Safety Officer</span>
+              </div>
+            </button>
+
+            <button type="button" class="role-preset-btn" data-email="elena.rostova@safeguard.io" data-pass="123456" data-name="Dr. Elena Rostova" data-role="Site Supervisor" data-avatar="ER" data-bg="#16a34a">
+              <span class="preset-avatar" style="background:#16a34a;">ER</span>
+              <div>
+                <strong>Dr. Elena Rostova</strong>
+                <span>Site Supervisor</span>
+              </div>
+            </button>
+
+            <button type="button" class="role-preset-btn" data-email="marcus.miller@safeguard.io" data-pass="123456" data-name="Marcus Miller" data-role="Gate Operator" data-avatar="MM" data-bg="#2563eb">
+              <span class="preset-avatar" style="background:#2563eb;">MM</span>
+              <div>
+                <strong>Marcus Miller</strong>
+                <span>Gate Operator</span>
+              </div>
+            </button>
+
+            <button type="button" class="role-preset-btn" data-email="demo.guest@safeguard.io" data-pass="123456" data-name="Guest Evaluator" data-role="Visitor" data-avatar="VI" data-bg="#64748b">
+              <span class="preset-avatar" style="background:#64748b;">VI</span>
+              <div>
+                <strong>Guest Evaluator</strong>
+                <span>Demo Mode</span>
+              </div>
+            </button>
+          </div>
+
+          <div class="login-divider">
+            <span>OR ENTER FIREBASE CREDENTIALS</span>
+          </div>
+
+          <form id="loginForm" class="login-form">
+            <div class="form-field">
+              <label>Work Email</label>
+              <input type="email" id="loginEmail" placeholder="officer@worksite-safety.org" value="alex.vance@safeguard.io" required>
+            </div>
+            <div class="form-field">
+              <label>Security Password / PIN</label>
+              <input type="password" id="loginPin" placeholder="••••••••" value="123456" required>
+            </div>
+            <button type="submit" class="btn-pill-orange btn-block" id="btnSubmitLogin">
+              <span id="loginBtnText">Sign In with Firebase</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- TAB 2: REGISTER VIEW -->
+        <div id="authRegisterContainer" class="hidden">
+          <p class="login-intro">Register an operator identity linked to Firebase Realtime Database:</p>
+
+          <form id="registerForm" class="login-form">
+            <div class="form-field">
+              <label>Full Name</label>
+              <input type="text" id="regName" placeholder="e.g. Jordan Hayes" required>
+            </div>
+            <div class="form-field">
+              <label>Work Email</label>
+              <input type="email" id="regEmail" placeholder="jordan.hayes@safeguard.io" required>
+            </div>
+            <div class="form-field">
+              <label>Password (min 6 characters)</label>
+              <input type="password" id="regPassword" placeholder="••••••••" minlength="6" required>
+            </div>
+            <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+              <div class="form-field">
+                <label>Department</label>
+                <select id="regDept" class="filter-select" style="width:100%;">
+                  <option value="Construction Operations">Construction Operations</option>
+                  <option value="Quality & Safety">Quality & Safety</option>
+                  <option value="Heavy Machinery">Heavy Machinery</option>
+                  <option value="Electrical High Voltage">Electrical High Voltage</option>
+                  <option value="Logistics & Supply">Logistics & Supply</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Terminal Role</label>
+                <select id="regRole" class="filter-select" style="width:100%;">
+                  <option value="Safety Officer">Safety Officer</option>
+                  <option value="Site Supervisor">Site Supervisor</option>
+                  <option value="Gate Operator">Gate Operator</option>
+                  <option value="Safety Auditor">Safety Auditor</option>
+                  <option value="Contractor Tech">Contractor Tech</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn-pill-orange btn-block" id="btnSubmitRegister">
+              <span id="registerBtnText">Create Firebase Account</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       MODAL 3: ADD NEW STAFF MEMBER MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="addStaffModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="pill-badge-orange">PERSONNEL REGISTRY</span>
+          <h2>Enroll New Staff Member</h2>
+        </div>
+        <button class="btn-close-modal" id="btnCloseAddStaffModal">&times;</button>
+      </div>
+
+      <form id="addStaffForm">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="newStaffName">Full Name *</label>
+              <input type="text" id="newStaffName" required placeholder="e.g. Jordan Hayes">
+            </div>
+            <div class="form-field">
+              <label for="newStaffEmpId">Employee / Contractor ID *</label>
+              <input type="text" id="newStaffEmpId" required placeholder="EMP-9021">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="newStaffDept">Department *</label>
+              <select id="newStaffDept" required>
+                <option value="Construction Operations">Construction Operations</option>
+                <option value="Heavy Machinery">Heavy Machinery</option>
+                <option value="Quality & Safety">Quality &amp; Safety</option>
+                <option value="Electrical High Voltage">Electrical High Voltage</option>
+                <option value="Logistics & Supply">Logistics &amp; Supply</option>
+                <option value="Site Visitors">Site Visitors / Contractors</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="newStaffRole">Job Title / Designation *</label>
+              <input type="text" id="newStaffRole" required placeholder="e.g. Structural Rigger">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Mandatory PPE Gear For This Worker:</label>
+            <div class="ppe-check-group">
+              <label><input type="checkbox" id="staffReqHelmet" checked> Hard Hat Helmet</label>
+              <label><input type="checkbox" id="staffReqVest" checked> Safety Vest</label>
+              <label><input type="checkbox" id="staffReqMask"> Face Mask</label>
+              <label><input type="checkbox" id="staffReqGloves"> Gloves</label>
+              <label><input type="checkbox" id="staffReqShoes"> Safety Boots</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-tool-pill" id="btnCancelAddStaff">Cancel</button>
+          <button type="submit" class="btn-pill-orange" id="btnSubmitAddStaff">Save &amp; Enroll</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       MODAL 4: RECORD INSPECTION FORENSICS LIGHTBOX MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="previewModal">
+    <div class="modal-card modal-preview">
+      <div class="modal-header">
+        <div>
+          <span class="pill-badge-orange">FORENSIC RECORD</span>
+          <h3 id="previewTitle">Inspection Capture Preview</h3>
+        </div>
+        <button class="btn-close-modal" id="btnClosePreviewModal">&times;</button>
+      </div>
+      <div class="modal-body preview-body">
+        <div class="preview-img-container">
+          <img id="previewImg" src="" alt="Capture Snapshot">
+        </div>
+        <div class="preview-details-sidebar" id="previewDetailsSidebar">
+          <!-- Populated dynamically via app.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       MODAL 5: HARDWARE BLUEPRINT & SYSTEM ARCHITECTURE
+       ========================================================================= -->
+  <div class="modal-backdrop hidden" id="rpiModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="pill-badge-orange">HARDWARE BLUEPRINT</span>
+          <h2>Laptop + Display + Servo Motor Setup Guide</h2>
+        </div>
+        <button class="btn-close-modal" id="btnCloseRpiModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-intro">
+          This system is optimized to run fully on your laptop using its built-in or USB webcam. When you are ready to connect physical servo gates and secondary mini displays, connect them via USB / Arduino / ESP32 serial interface.
+        </p>
+
+        <!-- HARDWARE COMPONENTS TABLE -->
+        <h3 class="blueprint-subtitle">1. System Hardware Components</h3>
+        <table class="pinout-table">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Hardware Device</th>
+              <th>Current Stage</th>
+              <th>Final Physical Connection</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Camera Feed</strong></td>
+              <td>Laptop Built-in HD Camera (or USB Webcam)</td>
+              <td><span style="color:#059669;font-weight:600;">Active Now</span></td>
+              <td>Built-in / USB Camera</td>
+            </tr>
+            <tr>
+              <td><strong>Access Display</strong></td>
+              <td>Secondary Mini LCD / HDMI Monitor (or Serial Display)</td>
+              <td><span style="color:#2563eb;font-weight:600;">Simulated in UI</span></td>
+              <td>Small HDMI screen or USB/Serial OLED</td>
+            </tr>
+            <tr>
+              <td><strong>Gate Servo Motor</strong></td>
+              <td>SG90 / MG996R 180&deg; Servo Motor</td>
+              <td><span style="color:#2563eb;font-weight:600;">Simulated in UI</span></td>
+              <td>USB-to-Serial / Arduino PWM</td>
+            </tr>
+            <tr>
+              <td><strong>Alert Signal</strong></td>
+              <td>Audio Chime &amp; LED Indicators</td>
+              <td><span style="color:#059669;font-weight:600;">Active in Audio/UI</span></td>
+              <td>Laptop Speakers / USB Buzzer</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- HOW TO RUN -->
+        <h3 class="blueprint-subtitle">2. Starting the System on Your Laptop</h3>
+        <div class="terminal-block">
+          <div class="terminal-header">
+            <span>Terminal</span>
+          </div>
+          <pre><code># 1. Start the backend &amp; web interface
+python3 run.py
+
+# 2. Open browser:
+http://localhost:8000</code></pre>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-pill-orange" id="btnDoneRpiModal">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="firebase-service.js?v=2.6"></script>
+  <script src="simulator.js?v=2.6"></script>
+  <script src="app.js?v=2.6"></script>
+</body>
+</html>
