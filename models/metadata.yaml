@@ -1,0 +1,24 @@
+# PPE Detection Model Configuration & Training Metrics
+model_name: yolov8n-ppe-industrial
+architecture: YOLOv8-Nano
+format: ONNX / PyTorch
+input_shape: [1, 3, 640, 640]
+num_classes: 6
+classes:
+  0: helmet
+  1: vest
+  2: mask
+  3: gloves
+  4: boots
+  5: person
+
+training_metrics:
+  dataset: Industrial-PPE-Safety-Dataset-v2
+  epochs: 100
+  batch_size: 32
+  imgsz: 640
+  mAP50: 0.948
+  mAP50-95: 0.782
+  precision: 0.935
+  recall: 0.912
+  inference_speed_rpi4: 38ms

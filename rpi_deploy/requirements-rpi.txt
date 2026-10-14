@@ -1,0 +1,11 @@
+fastapi>=0.100.0
+uvicorn>=0.22.0
+pillow>=9.5.0
+python-multipart>=0.0.6
+numpy>=1.23.0
+opencv-python-headless>=4.7.0
+RPi.GPIO>=0.7.1
+smbus2>=0.4.2
+websockets>=11.0
+aiofiles>=23.1.0
+requests>=2.31.0
