@@ -4,15 +4,22 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 CAPTURES_DIR = DATA_DIR / "captures"
+FACES_DIR = DATA_DIR / "faces"
 SAMPLES_DIR = BASE_DIR / "tests" / "sample_images"
 MODELS_DIR = BASE_DIR / "backend" / "models"
 MODEL_PATH = MODELS_DIR / "ppe_yolov8_detector.onnx"
+FACE_MODEL_PATH = MODELS_DIR / "face_detection_yunet.onnx"
+SFACE_MODEL_PATH = MODELS_DIR / "face_recognition_sface.onnx"
 
 # Ensure directories exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 CAPTURES_DIR.mkdir(parents=True, exist_ok=True)
+FACES_DIR.mkdir(parents=True, exist_ok=True)
 SAMPLES_DIR.mkdir(parents=True, exist_ok=True)
 MODELS_DIR.mkdir(parents=True, exist_ok=True)
+
+# Biometric Face Recognition threshold (SFace cosine similarity; OpenCV LFW benchmark = 0.363)
+DEFAULT_FACE_MATCH_THRESHOLD = 0.38
 
 # Required PPE items for access grant (Prioritizing Helmet & High-Vis Vest)
 DEFAULT_REQUIRED_PPE = ["helmet", "vest"]

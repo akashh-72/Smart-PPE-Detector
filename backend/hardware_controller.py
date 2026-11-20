@@ -126,8 +126,26 @@ class VirtualHardwareSimulator(BaseHardwareController):
         # Run notify in a non-blocking thread so callers never block or hang on slow listeners
         threading.Thread(target=self.notify, args=(state,), daemon=True).start()
 
-    def grant_access(self, worker_name: str = "", cause: str = "WELCOME", callback_after_close: Optional[Callable] = None):
-        welcome_text = "WELCOME"
+    def grant_access(self, worker_name: str = "", worker_role: str = "", cause: str = "WELCOME", callback_after_close: Optional[Callable] = None):
+        clean_name = (worker_name or "").strip().upper()
+        clean_role = (worker_role or "").strip().upper()
+        first_name = clean_name.split()[0] if clean_name else ""
+
+        # Normalize role for LCD 16-char fit (e.g. WORKSHOP MANAGER -> WORKSHOP MGR)
+        if clean_role == "WORKSHOP MANAGER":
+            lcd_role = "WORKSHOP MGR"
+        else:
+            lcd_role = clean_role
+
+        if lcd_role and first_name:
+            welcome_text = f"{lcd_role}: {first_name}"
+        elif lcd_role:
+            welcome_text = lcd_role
+        elif first_name:
+            welcome_text = f"WELCOME {first_name}"
+        else:
+            welcome_text = (cause or "WELCOME")
+
         with self._lock:
             self._gate_state = "OPENING"
             self._gate_angle = 90
@@ -280,11 +298,29 @@ class RaspberryPiHardwareController(BaseHardwareController):
         l2 = line2[:16].ljust(16)
         print(f"[RPI LCD] |{l1}| / |{l2}|")
 
-    def grant_access(self, worker_name: str = "", cause: str = "WELCOME", callback_after_close: Optional[Callable] = None):
+    def grant_access(self, worker_name: str = "", worker_role: str = "", cause: str = "WELCOME", callback_after_close: Optional[Callable] = None):
+        super().grant_access(worker_name=worker_name, worker_role=worker_role, cause=cause, callback_after_close=callback_after_close)
+        clean_name = (worker_name or "").strip().upper()
+        clean_role = (worker_role or "").strip().upper()
+        first_name = clean_name.split()[0] if clean_name else ""
+        if clean_role == "WORKSHOP MANAGER":
+            lcd_role = "WORKSHOP MGR"
+        else:
+            lcd_role = clean_role
+
+        if lcd_role and first_name:
+            welcome_text = f"{lcd_role}: {first_name}"
+        elif lcd_role:
+            welcome_text = lcd_role
+        elif first_name:
+            welcome_text = f"WELCOME {first_name}"
+        else:
+            welcome_text = (cause or "WELCOME")
+
         GPIO.output(self.green_pin, GPIO.HIGH)
         GPIO.output(self.red_pin, GPIO.LOW)
         GPIO.output(self.buzzer_pin, GPIO.LOW)
-        self._write_lcd("ACCESS ALLOWED", "WELCOME")
+        self._write_lcd("ACCESS ALLOWED", welcome_text)
         self._set_servo_angle(90)
 
         def auto_close():
@@ -480,11 +516,28 @@ class ArduinoHardwareController(VirtualHardwareSimulator):
 
             self._write_raw(cmd)
 
-    def grant_access(self, worker_name: str = "", cause: str = "WELCOME", callback_after_close: Optional[Callable] = None):
-        super().grant_access(worker_name=worker_name, cause=cause, callback_after_close=callback_after_close)
+    def grant_access(self, worker_name: str = "", worker_role: str = "", cause: str = "WELCOME", callback_after_close: Optional[Callable] = None):
+        super().grant_access(worker_name=worker_name, worker_role=worker_role, cause=cause, callback_after_close=callback_after_close)
+        clean_name = (worker_name or "").strip().upper()
+        clean_role = (worker_role or "").strip().upper()
+        first_name = clean_name.split()[0] if clean_name else ""
+        if clean_role == "WORKSHOP MANAGER":
+            lcd_role = "WORKSHOP MGR"
+        else:
+            lcd_role = clean_role
+
+        if lcd_role and first_name:
+            welcome_msg = f"{lcd_role}: {first_name}"
+        elif lcd_role:
+            welcome_msg = lcd_role
+        elif first_name:
+            welcome_msg = f"WELCOME {first_name}"
+        else:
+            welcome_msg = "WELCOME"
+
         # Dispatch command to physical Arduino
-        self.send_serial_command("ALLOWED:WELCOME\n")
-        self.send_serial_command("LCD:ACCESS ALLOWED|WELCOME\n")
+        self.send_serial_command(f"ALLOWED:{welcome_msg}\n")
+        self.send_serial_command(f"LCD:ACCESS ALLOWED|{welcome_msg}\n")
 
     def deny_access(self, missing_items: Optional[List[str]] = None, cause: str = ""):
         super().deny_access(missing_items=missing_items, cause=cause)
