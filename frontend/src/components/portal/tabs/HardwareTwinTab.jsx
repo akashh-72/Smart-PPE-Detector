@@ -467,12 +467,32 @@ export default function HardwareTwinTab() {
             <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button 
                 className="skinive-btn-pill-primary"
-                onClick={() => handleTestScreen("ALLOWED", { worker_name: "", cause: "WELCOME" })}
+                onClick={() => handleTestScreen("ALLOWED", { worker_name: "AKASH", worker_role: "WELDER", cause: "WELCOME" })}
                 disabled={isUpdating}
                 style={{ fontSize: '0.78rem', padding: '0.4rem 0.85rem' }}
               >
                 <CheckCircle2 size={14} />
-                <span>Test "ACCESS ALLOWED / WELCOME"</span>
+                <span>Test "WELDER: AKASH"</span>
+              </button>
+
+              <button 
+                className="skinive-btn-pill-primary"
+                onClick={() => handleTestScreen("ALLOWED", { worker_name: "MARCUS", worker_role: "WORKSHOP MANAGER", cause: "WELCOME" })}
+                disabled={isUpdating}
+                style={{ fontSize: '0.78rem', padding: '0.4rem 0.85rem' }}
+              >
+                <CheckCircle2 size={14} />
+                <span>Test "WORKSHOP MGR: MARCUS"</span>
+              </button>
+
+              <button 
+                className="skinive-btn-pill-secondary"
+                onClick={() => handleTestScreen("ALLOWED", { worker_name: "ALEX", worker_role: "WORKER", cause: "WELCOME" })}
+                disabled={isUpdating}
+                style={{ fontSize: '0.78rem', padding: '0.4rem 0.85rem' }}
+              >
+                <CheckCircle2 size={14} />
+                <span>Test "WORKER: ALEX"</span>
               </button>
 
               <button 
@@ -482,7 +502,7 @@ export default function HardwareTwinTab() {
                 style={{ fontSize: '0.78rem', padding: '0.4rem 0.85rem', color: '#DC2626', borderColor: '#FECACA' }}
               >
                 <AlertTriangle size={14} />
-                <span>Test "ACCESS DENIED / CAUSE"</span>
+                <span>Test "ACCESS DENIED"</span>
               </button>
 
               <button 

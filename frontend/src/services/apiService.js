@@ -1,34 +1,54 @@
 /**
  * SafeGuard AI - API Client Service
- * Interacts with FastAPI backend for inference, hardware twin, logs & configuration.
+ * Interacts with FastAPI backend for PPE & Biometric Face inference, hardware twin, logs & staff directory.
  */
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
 
-// Client-side fallback generator for standalone static previews (e.g. Vercel without active backend)
+// Client-side fallback generator: Fail-Secure (always DENIED if verification engine is unreachable)
 function createFallbackVerification(reqItems = ['helmet', 'vest']) {
   const items = reqItems && reqItems.length > 0 ? reqItems : ['helmet', 'vest'];
-  const hasHelmet = true;
-  const hasVest = true;
   return {
-    status: "GRANTED",
-    is_compliant: true,
-    compliance_percentage: 100.0,
-    average_confidence: 0.942,
-    inference_time_ms: 36.4,
+    status: "DENIED",
+    is_compliant: false,
+    ppe_is_compliant: false,
+    compliance_percentage: 0.0,
+    average_confidence: 0.0,
+    inference_time_ms: 0.0,
     required_items: items,
-    compliant_items: items,
-    missing_items: [],
+    compliant_items: [],
+    missing_items: items,
+    denial_reasons: ["ENGINE UNREACHABLE", ...items],
+    face_recognition: {
+      face_detected: false,
+      face_status: "NO_FACE",
+      is_authorized: false,
+      worker: null,
+      match_confidence: 0.0,
+      message: "Verification engine unreachable"
+    },
     detections: {
-      person: { detected: true, confidence: 0.985, bbox: [0.15, 0.1, 0.85, 0.95] },
-      helmet: { detected: true, confidence: 0.952, bbox: [0.35, 0.1, 0.65, 0.32] },
-      vest: { detected: true, confidence: 0.932, bbox: [0.25, 0.35, 0.75, 0.82] }
+      person: { detected: false, confidence: 0.0, bbox: [0, 0, 0, 0] },
+      helmet: { detected: false, confidence: 0.0, bbox: [0, 0, 0, 0] },
+      vest: { detected: false, confidence: 0.0, bbox: [0, 0, 0, 0] }
     },
     annotated_image: null,
     snapshot_filename: null,
-    message: "Access Allowed • Simulated Client-Side Verification",
+    message: "Access Denied • Verification Engine Unreachable or Failed",
     timestamp: new Date().toLocaleTimeString()
   };
+}
+
+async function extractErrorMessage(res, defaultMsg) {
+  try {
+    const data = await res.json();
+    if (data && data.detail) {
+      return typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail);
+    }
+  } catch {
+    // ignore parse error
+  }
+  return defaultMsg;
 }
 
 export async function verifyWebcam(imageBase64, requiredItems = null) {
@@ -81,12 +101,21 @@ export async function runBenchmark(scenarioId) {
     return {
       status: scenarioId.includes('denied') ? "DENIED" : "GRANTED",
       is_compliant: !scenarioId.includes('denied'),
+      ppe_is_compliant: !scenarioId.includes('denied'),
       compliance_percentage: scenarioId.includes('denied') ? 50.0 : 100.0,
       average_confidence: 0.935,
       inference_time_ms: 38.2,
       required_items: ["helmet", "vest"],
       compliant_items: scenarioId.includes('denied') ? ["vest"] : ["helmet", "vest"],
       missing_items: scenarioId.includes('denied') ? ["helmet"] : [],
+      face_recognition: {
+        face_detected: true,
+        face_status: "AUTHORIZED",
+        is_authorized: true,
+        simulated: true,
+        worker: { name: "Alex Vance (Simulated)", employee_id: "EMP-1042", department: "Construction Operations" },
+        match_confidence: 98.4
+      },
       detections: {
         person: { detected: true, confidence: 0.98 },
         vest: { detected: true, confidence: 0.94 }
@@ -207,7 +236,77 @@ export async function createStaff(staffData) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(staffData),
   });
-  if (!res.ok) throw new Error(`Failed to create staff member`);
+  if (!res.ok) {
+    const msg = await extractErrorMessage(res, "Failed to create staff member");
+    throw new Error(msg);
+  }
+  return await res.json();
+}
+
+export async function updateStaff(staffId, staffData) {
+  const res = await fetch(`${API_BASE}/api/staff/${staffId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(staffData),
+  });
+  if (!res.ok) {
+    const msg = await extractErrorMessage(res, "Failed to update staff member");
+    throw new Error(msg);
+  }
+  return await res.json();
+}
+
+export async function validateFaceFrame(imageBase64) {
+  const res = await fetch(`${API_BASE}/api/face/validate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ image_base64: imageBase64 }),
+  });
+  if (!res.ok) {
+    const msg = await extractErrorMessage(res, "No clear face detected in frame");
+    throw new Error(msg);
+  }
+  return await res.json();
+}
+
+export async function enrollStaffFace(staffId, imagesBase64, replace = false) {
+  const list = Array.isArray(imagesBase64) ? imagesBase64 : [imagesBase64];
+  const res = await fetch(`${API_BASE}/api/staff/${staffId}/face`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ images_base64: list, replace }),
+  });
+  if (!res.ok) {
+    const msg = await extractErrorMessage(res, "Failed to enroll worker face");
+    throw new Error(msg);
+  }
+  return await res.json();
+}
+
+export async function enrollStaffFaceUpload(staffId, file, replace = false) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("replace", replace ? "true" : "false");
+
+  const res = await fetch(`${API_BASE}/api/staff/${staffId}/face/upload`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!res.ok) {
+    const msg = await extractErrorMessage(res, "Failed to enroll face from uploaded photo");
+    throw new Error(msg);
+  }
+  return await res.json();
+}
+
+export async function clearStaffFace(staffId) {
+  const res = await fetch(`${API_BASE}/api/staff/${staffId}/face`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    const msg = await extractErrorMessage(res, "Failed to clear worker face data");
+    throw new Error(msg);
+  }
   return await res.json();
 }
 

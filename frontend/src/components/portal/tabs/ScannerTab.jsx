@@ -10,20 +10,20 @@ import {
   Clock, 
   HardHat, 
   RefreshCw, 
-  Sparkles,
-  Layers,
-  ArrowRight,
   Unlock,
   Lock,
   Volume2,
   Radio,
-  Eye,
   Check,
   X as XIcon,
   Zap,
-  SwitchCamera
+  SwitchCamera,
+  ScanFace,
+  UserCheck,
+  UserX,
+  ArrowRight
 } from 'lucide-react';
-import { verifyWebcam, verifyUpload, runBenchmark, getBenchmarks, toggleGate } from '../../../services/apiService';
+import { verifyWebcam, verifyUpload, runBenchmark, getBenchmarks, toggleGate, getConfig } from '../../../services/apiService';
 import { BENCHMARK_SCENARIOS, PPE_ITEMS_CATALOG } from '../../../data/mockData';
 
 // Web Audio API Synthesizer for Industrial Gateway Sound Cues
@@ -110,25 +110,58 @@ function speakGatewayAnnouncement(text) {
 function speakGatewayVerdict(result) {
   try {
     if (!result) return;
+    const faceRec = result.face_recognition || {};
+    const workerName = faceRec.worker?.name && !faceRec.simulated ? faceRec.worker.name.trim() : '';
+    const workerRole = faceRec.worker?.role && !faceRec.simulated ? faceRec.worker.role.trim() : '';
+    const requireFace = result.require_face_auth !== false;
+
     if (result.is_compliant) {
-      speakGatewayAnnouncement("Access allowed. Welcome to the workshop.");
+      if (workerRole && workerName) {
+        speakGatewayAnnouncement(`Welcome back ${workerRole} ${workerName}. Access allowed to the workshop.`);
+      } else if (workerName) {
+        speakGatewayAnnouncement(`Welcome back ${workerName}. Access allowed to the workshop.`);
+      } else if (workerRole) {
+        speakGatewayAnnouncement(`Welcome back ${workerRole}. Access allowed to the workshop.`);
+      } else {
+        speakGatewayAnnouncement("Access allowed. Welcome to the workshop.");
+      }
       return;
     }
 
     const missing = (result.missing_items || []).map(m => m.toLowerCase());
+    const designationTitle = (workerRole && workerName) ? `${workerRole} ${workerName}` : (workerName || workerRole || '');
+    const forWho = designationTitle ? ` for ${designationTitle}` : '';
+
+    if (requireFace && !faceRec.is_authorized) {
+      if (faceRec.face_status === 'NO_FACE') {
+        speakGatewayAnnouncement("Access denied. Worker face not detected. Please look directly at the camera.");
+        return;
+      }
+      if (faceRec.face_status === 'SUSPENDED') {
+        speakGatewayAnnouncement(`Access denied. Gate permit for ${designationTitle || 'this worker'} is currently suspended.`);
+        return;
+      }
+      if (missing.length > 0) {
+        speakGatewayAnnouncement(`Access denied. Unauthorized person detected, and missing ${missing.join(' and ')}.`);
+      } else {
+        speakGatewayAnnouncement("Access denied. Unauthorized person detected. Worker is not registered in the directory.");
+      }
+      return;
+    }
+
     const hasHelmet = !missing.includes('helmet');
     const hasVest = !missing.includes('vest');
 
     if (!hasHelmet && !hasVest) {
-      speakGatewayAnnouncement("Access denied. Safety helmet and high visibility vest are missing. Please wear the helmet and vest, and try again.");
+      speakGatewayAnnouncement(`Access denied${forWho}. Safety helmet and high visibility vest are missing. Please wear the helmet and vest, and try again.`);
     } else if (!hasHelmet) {
-      speakGatewayAnnouncement("Access denied. Safety helmet is missing. Please wear the helmet, and try again.");
+      speakGatewayAnnouncement(`Access denied${forWho}. Safety helmet is missing. Please wear the helmet, and try again.`);
     } else if (!hasVest) {
-      speakGatewayAnnouncement("Access denied. High visibility vest is missing. Please wear the vest, and try again.");
+      speakGatewayAnnouncement(`Access denied${forWho}. High visibility vest is missing. Please wear the vest, and try again.`);
     } else if (missing.length > 0) {
-      speakGatewayAnnouncement(`Access denied. Missing ${missing.join(' and ')}. Please wear required safety gear, and try again.`);
+      speakGatewayAnnouncement(`Access denied${forWho}. Missing ${missing.join(' and ')}. Please wear required safety gear, and try again.`);
     } else {
-      speakGatewayAnnouncement("Access denied. Please wear required safety gear, and try again.");
+      speakGatewayAnnouncement(`Access denied${forWho}. Please wear required safety gear, and try again.`);
     }
   } catch (e) {
     console.warn("Speech error:", e);
@@ -147,6 +180,8 @@ export default function ScannerTab({ onNavigateTab }) {
   // Scan results & images
   const [analysisResult, setAnalysisResult] = useState(null);
   const [annotatedImgUrl, setAnnotatedImgUrl] = useState(null);
+  const [enrolledFacesCount, setEnrolledFacesCount] = useState(0);
+  const [requireFaceAuth, setRequireFaceAuth] = useState(true);
 
   // Simulated / live hardware gate state
   const [gateOpen, setGateOpen] = useState(false);
@@ -171,11 +206,20 @@ export default function ScannerTab({ onNavigateTab }) {
     return `data:image/jpeg;base64,${val}`;
   };
 
-  // Load benchmarks from backend
+  // Load benchmarks & enrolled biometric count from backend
   useEffect(() => {
     getBenchmarks()
       .then((data) => {
         if (data && data.length) setBenchmarks(data);
+      })
+      .catch(() => {});
+
+    getConfig()
+      .then((cfg) => {
+        if (cfg) {
+          if (typeof cfg.enrolled_faces_count === 'number') setEnrolledFacesCount(cfg.enrolled_faces_count);
+          if (typeof cfg.require_face_auth === 'boolean') setRequireFaceAuth(cfg.require_face_auth);
+        }
       })
       .catch(() => {});
   }, []);
@@ -242,7 +286,6 @@ export default function ScannerTab({ onNavigateTab }) {
       setViewMode('live');
     } catch (err) {
       console.warn("Webcam access error with facingMode:", err);
-      // Fallback without exact facing constraint
       try {
         const fallbackStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         streamRef.current = fallbackStream;
@@ -293,11 +336,30 @@ export default function ScannerTab({ onNavigateTab }) {
     return canvas.toDataURL('image/jpeg', 0.85);
   };
 
+  const applyVerificationResponse = (res) => {
+    setAnalysisResult(res);
+    if (typeof res?.face_recognition?.enrolled_workers_count === 'number') {
+      setEnrolledFacesCount(res.face_recognition.enrolled_workers_count);
+    }
+    if (res.annotated_image) {
+      setAnnotatedImgUrl(normalizeImageDataUrl(res.annotated_image));
+      setViewMode('annotated');
+    }
+    if (res.is_compliant) {
+      playGatewayTone('granted');
+      speakGatewayVerdict(res);
+      startGateCountdown(5);
+    } else {
+      playGatewayTone('denied');
+      speakGatewayVerdict(res);
+      setGateOpen(false);
+    }
+  };
+
   // Run Verification on Current Frame
   const handleCaptureVerify = async () => {
     if (isProcessing) return;
 
-    // If using benchmarks or upload, re-run that
     if (activeSource === 'benchmarks' && selectedBenchmark) {
       const b = benchmarks.find(x => x.id === selectedBenchmark) || benchmarks[0];
       handleRunBenchmark(b);
@@ -309,7 +371,6 @@ export default function ScannerTab({ onNavigateTab }) {
       return;
     }
 
-    // Live Camera Mode: Ensure camera is on and frame is grabbed directly
     setViewMode('live');
     if (!isCameraActive || !streamRef.current) {
       await startCamera();
@@ -326,20 +387,7 @@ export default function ScannerTab({ onNavigateTab }) {
     setIsProcessing(true);
     try {
       const res = await verifyWebcam(b64);
-      setAnalysisResult(res);
-      if (res.annotated_image) {
-        setAnnotatedImgUrl(normalizeImageDataUrl(res.annotated_image));
-        setViewMode('annotated');
-      }
-      if (res.is_compliant) {
-        playGatewayTone('granted');
-        speakGatewayAnnouncement("Access allowed. Welcome to the workshop.");
-        startGateCountdown(5);
-      } else {
-        playGatewayTone('denied');
-        speakGatewayVerdict(res);
-        setGateOpen(false);
-      }
+      applyVerificationResponse(res);
     } catch (err) {
       console.error("Verification error:", err);
     } finally {
@@ -347,7 +395,7 @@ export default function ScannerTab({ onNavigateTab }) {
     }
   };
 
-  // Dedicated Re-Scan Handler: Re-scans live camera or currently selected source (Zero dummy fallbacks)
+  // Dedicated Re-Scan Handler
   const handleReScan = async () => {
     if (isProcessing) return;
     setAnalysisResult(null);
@@ -407,19 +455,7 @@ export default function ScannerTab({ onNavigateTab }) {
     setIsProcessing(true);
     try {
       const res = await runBenchmark(scenario.id);
-      setAnalysisResult(res);
-      if (res.annotated_image) {
-        setAnnotatedImgUrl(normalizeImageDataUrl(res.annotated_image));
-      }
-      if (res.is_compliant) {
-        playGatewayTone('granted');
-        speakGatewayAnnouncement("Access allowed. Welcome to the workshop.");
-        startGateCountdown(5);
-      } else {
-        playGatewayTone('denied');
-        speakGatewayVerdict(res);
-        setGateOpen(false);
-      }
+      applyVerificationResponse(res);
     } catch (err) {
       console.error("Benchmark error:", err);
     } finally {
@@ -433,33 +469,29 @@ export default function ScannerTab({ onNavigateTab }) {
     if (!file) return;
 
     setActiveSource('upload');
-    try {
-      const localUrl = URL.createObjectURL(file);
-      setAnnotatedImgUrl(localUrl);
+    const isHeic = file.name && file.name.toLowerCase().endsWith('.heic');
+    if (!isHeic) {
+      try {
+        const localUrl = URL.createObjectURL(file);
+        setAnnotatedImgUrl(localUrl);
+        setViewMode('annotated');
+      } catch (err) {}
+    } else {
       setViewMode('annotated');
-    } catch (err) {}
+    }
 
     playGatewayTone('scan');
     setIsProcessing(true);
     try {
       const res = await verifyUpload(file);
-      setAnalysisResult(res);
-      if (res.annotated_image) {
-        setAnnotatedImgUrl(normalizeImageDataUrl(res.annotated_image));
-      }
-      if (res.is_compliant) {
-        playGatewayTone('granted');
-        speakGatewayAnnouncement("Access allowed. Welcome to the workshop.");
-        startGateCountdown(5);
-      } else {
-        playGatewayTone('denied');
-        speakGatewayVerdict(res);
-        setGateOpen(false);
-      }
+      applyVerificationResponse(res);
     } catch (err) {
       console.error("File upload error:", err);
     } finally {
       setIsProcessing(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -487,6 +519,66 @@ export default function ScannerTab({ onNavigateTab }) {
     }
   };
 
+  // Derived Face & Verdict Display Info
+  const faceRec = analysisResult?.face_recognition || null;
+  const matchedWorker = faceRec?.worker || null;
+  const faceStatus = faceRec?.face_status || null;
+  const faceEnforced = analysisResult ? analysisResult.require_face_auth !== false : requireFaceAuth;
+  const faceFailed = Boolean(analysisResult && faceEnforced && !faceRec?.is_authorized);
+
+  const buildVerdictEyebrow = () => {
+    if (!analysisResult) return 'STANDBY INSPECTION MODE';
+    if (analysisResult.is_compliant) return 'IDENTITY & PPE AUTHORIZED';
+    if (faceFailed && faceStatus === 'UNAUTHORIZED') return 'SECURITY ALERT • UNAUTHORIZED PERSON';
+    if (faceFailed && faceStatus === 'SUSPENDED') return 'PERMIT SUSPENDED • ACCESS BLOCKED';
+    if (faceFailed && faceStatus === 'NO_FACE') return 'BIOMETRIC CHECK • FACE NOT VISIBLE';
+    return 'GATE ACCESS RESTRICTED • PPE INCOMPLETE';
+  };
+
+  const buildVerdictDescription = () => {
+    if (!analysisResult) return '';
+    if (analysisResult.is_compliant) {
+      if (matchedWorker && !faceRec?.simulated) {
+        const rolePrefix = matchedWorker.role ? `${matchedWorker.role} ` : '';
+        return `Welcome back, ${rolePrefix}${matchedWorker.name} (${matchedWorker.employee_id})! Identity & mandatory PPE verified. Barrier gate released.`;
+      }
+      return 'Access Allowed • Welcome to the Workshop! All mandatory safety gear verified.';
+    }
+
+    const missingPpe = analysisResult.missing_items || [];
+    if (faceFailed) {
+      if (faceStatus === 'NO_FACE') {
+        return 'Worker face is not clearly visible! Look directly at the gate camera so both face identity and PPE can be verified.';
+      }
+      if (faceStatus === 'SUSPENDED') {
+        return `Identified ${matchedWorker?.name || 'worker'}, whose site gate permit is currently suspended/revoked.`;
+      }
+      if (missingPpe.length > 0) {
+        return 'Unauthorized person (face not in Worker Directory) AND missing mandatory safety gear! Turnstile barrier locked.';
+      }
+      return enrolledFacesCount === 0
+        ? 'No worker faces are enrolled yet! Register this worker in Worker Directory to authorize gate entry.'
+        : 'PPE gear checked, but this person is UNAUTHORIZED — face does not match any registered worker in the directory!';
+    }
+
+    if (matchedWorker) {
+      return `Identity verified (${matchedWorker.name}), but mandatory PPE is incomplete! Equip missing safety gear and re-scan.`;
+    }
+    return 'PPE violation detected! Turnstile barrier locked. Instruct worker to equip missing safety gear.';
+  };
+
+  const alertPills = [];
+  if (analysisResult && !analysisResult.is_compliant) {
+    if (faceFailed) {
+      if (faceStatus === 'UNAUTHORIZED') alertPills.push('UNAUTHORIZED PERSON');
+      else if (faceStatus === 'SUSPENDED') alertPills.push('PERMIT SUSPENDED');
+      else if (faceStatus === 'NO_FACE') alertPills.push('FACE NOT DETECTED');
+    }
+    (analysisResult.missing_items || []).forEach((itm) => {
+      alertPills.push(`MISSING: ${itm.toUpperCase()}`);
+    });
+  }
+
   return (
     <div className="operator-station-suite animate-fadeIn">
       
@@ -495,14 +587,25 @@ export default function ScannerTab({ onNavigateTab }) {
         <div className="operator-header-left">
           <div className="operator-title-row">
             <h1>Workshop Entrance Access Gateway</h1>
-            <span className="operator-badge-live">GATE-01 ACTIVE</span>
+            <span className="operator-badge-live">PPE + FACE ID ACTIVE</span>
           </div>
           <p className="operator-subtitle">
-            Stand worker in front of the lens. Click <strong>SCAN WORKER</strong> to verify mandatory PPE.
+            Stand worker in front of the lens. Click <strong>SCAN WORKER</strong> to simultaneously verify <strong>Face Identity</strong> &amp; <strong>Mandatory PPE</strong>.
           </p>
         </div>
 
         <div className="operator-header-telemetry">
+          <div className="op-telemetry-item">
+            <span className="op-tel-label">BIOMETRIC DB</span>
+            <span
+              className={`op-tel-val ${enrolledFacesCount > 0 ? 'text-emerald' : 'text-amber'}`}
+              style={{ cursor: onNavigateTab ? 'pointer' : 'default' }}
+              onClick={() => onNavigateTab && onNavigateTab('staff')}
+              title="Open Worker Directory to enroll faces"
+            >
+              {enrolledFacesCount} {enrolledFacesCount === 1 ? 'FACE' : 'FACES'}
+            </span>
+          </div>
           <div className="op-telemetry-item">
             <span className="op-tel-label">BARRIER SERVO</span>
             <span className={`op-tel-val ${gateOpen ? 'text-emerald' : 'text-slate'}`}>
@@ -582,7 +685,7 @@ export default function ScannerTab({ onNavigateTab }) {
           {/* Camera Viewfinder Screen */}
           <div className="operator-viewfinder">
             
-            {/* Live Video Feed - Kept active for immediate frame grabs & zero-lag re-scans */}
+            {/* Live Video Feed */}
             <video 
               ref={videoRef} 
               autoPlay 
@@ -601,7 +704,7 @@ export default function ScannerTab({ onNavigateTab }) {
             {viewMode === 'annotated' && annotatedImgUrl && (
               <img 
                 src={annotatedImgUrl} 
-                alt="AI Annotated PPE Scan Result" 
+                alt="AI Annotated PPE & Face Scan Result" 
                 className="op-annotated-img"
                 style={{ zIndex: 2 }}
               />
@@ -615,7 +718,7 @@ export default function ScannerTab({ onNavigateTab }) {
                 </div>
                 <h3>Camera Standby</h3>
                 <p>Allow camera permissions or click below to activate edge camera.</p>
-                <button className="op-btn-start-camera" onClick={startCamera}>
+                <button className="op-btn-start-camera" onClick={() => startCamera()}>
                   <span>Activate Live Camera</span>
                 </button>
               </div>
@@ -628,14 +731,14 @@ export default function ScannerTab({ onNavigateTab }) {
               <div className="hud-corner bottom-left"></div>
               <div className="hud-corner bottom-right"></div>
               <div className="hud-center-marker">
-                <span className="hud-position-text">WORKER POSITION GUIDE</span>
+                <span className="hud-position-text">FACE + HELMET + VEST TARGET ZONE</span>
               </div>
             </div>
 
             {/* Laser scanning sweep animation */}
             {isProcessing && (
               <div className="op-laser-scanner-line">
-                <span className="op-laser-label">SCANNING WORKER PPE...</span>
+                <span className="op-laser-label">VERIFYING FACE ID &amp; WORKER PPE...</span>
               </div>
             )}
 
@@ -682,29 +785,26 @@ export default function ScannerTab({ onNavigateTab }) {
             </div>
           )}
 
-          {/* PRIMARY OPERATOR CONTROL BAR - High Visibility & Ease of Use */}
+          {/* PRIMARY OPERATOR CONTROL BAR */}
           <div className="operator-command-bar">
             
-            {/* The Main SCAN Button: High-visibility, prominent, impossible to miss! */}
             <button 
               className={`op-main-scan-btn ${isProcessing ? 'scanning' : ''}`}
               onClick={handleCaptureVerify}
               disabled={isProcessing}
-              title="Click or press Spacebar to scan worker"
+              title="Click or press Spacebar to scan worker face & PPE"
             >
               <Zap size={22} className="op-scan-bolt" />
               <div className="op-scan-btn-text">
                 <span className="op-scan-primary-title">
                   {isProcessing ? 'ANALYZING...' : 'SCAN WORKER'}
                 </span>
-                <span className="op-scan-hotkey-hint">TAP OR PRESS SPACEBAR</span>
+                <span className="op-scan-hotkey-hint">FACE ID + PPE • SPACEBAR</span>
               </div>
             </button>
 
-            {/* Secondary Operational Actions */}
             <div className="op-secondary-controls">
               
-              {/* Hands-Free Auto-Scan Mode */}
               <button 
                 className={`op-aux-btn ${isContinuous ? 'active-continuous' : ''}`}
                 onClick={toggleContinuous}
@@ -714,7 +814,6 @@ export default function ScannerTab({ onNavigateTab }) {
                 <span>{isContinuous ? 'Auto ON' : 'Auto'}</span>
               </button>
 
-              {/* Manual Gate Release (Override) */}
               <button 
                 className={`op-aux-btn manual-gate ${gateOpen ? 'gate-is-open' : ''}`}
                 onClick={handleManualGateRelease}
@@ -724,7 +823,6 @@ export default function ScannerTab({ onNavigateTab }) {
                 <span>Gate</span>
               </button>
 
-              {/* Mobile Camera Flip Switcher */}
               {activeSource === 'webcam' && (
                 <button 
                   className="op-aux-btn flip-btn"
@@ -736,7 +834,6 @@ export default function ScannerTab({ onNavigateTab }) {
                 </button>
               )}
 
-              {/* Reset Standby */}
               <button 
                 className="op-aux-btn icon-btn"
                 onClick={handleResetStandby}
@@ -750,7 +847,7 @@ export default function ScannerTab({ onNavigateTab }) {
 
         </div>
 
-        {/* RIGHT COLUMN: Gate Access Decision & Mandatory PPE Checklist */}
+        {/* RIGHT COLUMN: Gate Access Decision, Biometric Face Identity & Mandatory PPE Checklist */}
         <div className="operator-decision-card">
           
           {/* 1. DYNAMIC VERDICT BANNER */}
@@ -766,50 +863,56 @@ export default function ScannerTab({ onNavigateTab }) {
                 </div>
 
                 <div className="op-verdict-title-col">
-                  <span className="op-verdict-eyebrow">
-                    {analysisResult.is_compliant ? 'GATE ACCESS AUTHORIZED' : 'GATE ACCESS RESTRICTED'}
-                  </span>
+                  <span className="op-verdict-eyebrow">{buildVerdictEyebrow()}</span>
                   <h2 className="op-verdict-main-title">
                     {analysisResult.is_compliant ? 'ACCESS ALLOWED' : 'ACCESS DENIED'}
                   </h2>
                 </div>
               </div>
 
-              <p className="op-verdict-desc">
-                {analysisResult.is_compliant 
-                  ? 'Access Allowed • Welcome to the Workshop! All mandatory safety gear verified.'
-                  : 'PPE violation detected! Turnstile barrier locked. Instruct worker to equip missing safety gear.'}
-              </p>
+              <p className="op-verdict-desc">{buildVerdictDescription()}</p>
 
-              {/* Sliding Marquee Ticker for Missing Items (When Denied) */}
-              {!analysisResult.is_compliant && analysisResult.missing_items && analysisResult.missing_items.length > 0 && (
+              {/* Sliding Marquee Ticker when Denied */}
+              {!analysisResult.is_compliant && alertPills.length > 0 && (
                 <div className="op-sliding-ticker-track">
                   <div className="op-sliding-ticker-content">
                     <span>
-                      ⛔ ACCESS DENIED • MISSING: {analysisResult.missing_items.map(i => i.toUpperCase()).join(' & ')} • PLEASE WEAR REQUIRED SAFETY GEAR TO ENTER • ⛔ ACCESS DENIED • MISSING: {analysisResult.missing_items.map(i => i.toUpperCase()).join(' & ')} • PLEASE WEAR REQUIRED SAFETY GEAR TO ENTER • 
+                      ⛔ ACCESS DENIED • {alertPills.join(' • ')} • ENTRY BLOCKED AT TURNSTILE • ⛔ ACCESS DENIED • {alertPills.join(' • ')} • ENTRY BLOCKED AT TURNSTILE • 
                     </span>
                   </div>
                 </div>
               )}
 
-              {/* Specific Missing Gear Alert Pills (When Denied) */}
-              {!analysisResult.is_compliant && analysisResult.missing_items && analysisResult.missing_items.length > 0 && (
+              {/* Specific Alert Pills (Unauthorized Person & Missing Gear) */}
+              {!analysisResult.is_compliant && alertPills.length > 0 && (
                 <div className="op-missing-items-wrap">
-                  {analysisResult.missing_items.map((itemKey) => (
-                    <div key={itemKey} className="op-missing-pill">
+                  {alertPills.map((pillText) => (
+                    <div key={pillText} className="op-missing-pill">
                       <AlertTriangle size={13} />
-                      <span>MISSING: {itemKey.toUpperCase()}</span>
+                      <span>{pillText}</span>
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* Re-Scan Action button when denied */}
+              {/* Action buttons when denied */}
               {!analysisResult.is_compliant && (
-                <button className="op-rescan-btn" onClick={handleReScan}>
-                  <RotateCcw size={15} />
-                  <span>Re-Scan Worker (Live)</span>
-                </button>
+                <div className="op-verdict-actions-row">
+                  <button className="op-rescan-btn" onClick={handleReScan}>
+                    <RotateCcw size={15} />
+                    <span>Re-Scan Worker (Live)</span>
+                  </button>
+
+                  {faceFailed && onNavigateTab && (
+                    <button
+                      className="op-enroll-shortcut-btn"
+                      onClick={() => onNavigateTab('staff')}
+                    >
+                      <ScanFace size={15} />
+                      <span>Enroll Worker Face</span>
+                    </button>
+                  )}
+                </div>
               )}
 
               {/* Barrier Release Countdown Timer if Compliant */}
@@ -832,12 +935,141 @@ export default function ScannerTab({ onNavigateTab }) {
                 </div>
               </div>
               <p className="op-verdict-desc">
-                Worker step up to the yellow entrance marking. Click <strong>SCAN WORKER</strong> or press <strong>Spacebar</strong> to verify.
+                Step up to the yellow entrance marking. Click <strong>SCAN WORKER</strong> or press <strong>Spacebar</strong> to verify <strong>Face Identity</strong> &amp; <strong>PPE</strong>.
               </p>
             </div>
           )}
 
-          {/* 2. MANDATORY GEAR CHECKLIST MATRIX */}
+          {/* 2. BIOMETRIC WORKER IDENTITY VERIFICATION CARD */}
+          <div className="op-identity-card">
+            <div className="op-checklist-header">
+              <span className="op-checklist-title">BIOMETRIC WORKER IDENTITY</span>
+              {onNavigateTab && (
+                <button
+                  type="button"
+                  className="op-manage-faces-link"
+                  onClick={() => onNavigateTab('staff')}
+                >
+                  <span>Worker Directory ({enrolledFacesCount} Enrolled)</span>
+                  <ArrowRight size={12} />
+                </button>
+              )}
+            </div>
+
+            {analysisResult && faceRec ? (
+              <div
+                className={`op-identity-row ${
+                  faceRec.is_authorized
+                    ? 'authorized'
+                    : faceStatus === 'NO_FACE'
+                    ? 'no-face'
+                    : 'unauthorized'
+                }`}
+              >
+                {matchedWorker?.face_image ? (
+                  <img
+                    src={matchedWorker.face_image}
+                    alt={matchedWorker.name}
+                    className="op-identity-avatar-img"
+                  />
+                ) : (
+                  <div className="op-identity-icon-circle">
+                    {faceRec.is_authorized ? (
+                      <UserCheck size={19} />
+                    ) : faceStatus === 'NO_FACE' ? (
+                      <ScanFace size={19} />
+                    ) : (
+                      <UserX size={19} />
+                    )}
+                  </div>
+                )}
+
+                <div className="op-identity-text">
+                  <div className="op-gear-name-line">
+                    <span className="op-gear-name">
+                      {matchedWorker
+                        ? matchedWorker.name
+                        : faceStatus === 'NO_FACE'
+                        ? 'Face Not Visible'
+                        : 'Unauthorized Person'}
+                    </span>
+                    {matchedWorker?.role && (
+                      <span className="op-role-pill" style={{
+                        marginLeft: '0.45rem',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        background: '#EEF2FF',
+                        color: '#4338CA',
+                        padding: '0.15rem 0.5rem',
+                        borderRadius: '999px',
+                        border: '1px solid #C7D2FE',
+                        letterSpacing: '0.02em',
+                        textTransform: 'uppercase'
+                      }}>
+                        {matchedWorker.role}
+                      </span>
+                    )}
+                    {faceEnforced && <span className="op-mandatory-pill">REQUIRED</span>}
+                  </div>
+                  <span className="op-gear-standard">
+                    {matchedWorker
+                      ? `${matchedWorker.role ? matchedWorker.role.toUpperCase() + ' • ' : ''}${matchedWorker.employee_id} • ${matchedWorker.department || 'Operations'}`
+                      : faceStatus === 'NO_FACE'
+                      ? 'Look directly at camera lens for face scan'
+                      : enrolledFacesCount === 0
+                      ? 'No workers enrolled yet — add face in Worker Directory'
+                      : 'Unregistered individual — not in Worker Directory'}
+                  </span>
+                </div>
+
+                <div className="op-gear-verdict">
+                  <span
+                    className={`op-status-badge ${
+                      faceRec.is_authorized
+                        ? 'verified'
+                        : faceStatus === 'NO_FACE'
+                        ? 'awaiting'
+                        : 'missing'
+                    }`}
+                  >
+                    {faceRec.is_authorized && <Check size={12} />}
+                    {!faceRec.is_authorized && <XIcon size={12} />}
+                    <span>
+                      {faceRec.is_authorized
+                        ? `AUTHORIZED (${Math.round(faceRec.match_confidence || 96)}%)`
+                        : faceStatus === 'SUSPENDED'
+                        ? 'SUSPENDED'
+                        : faceStatus === 'NO_FACE'
+                        ? 'NO FACE'
+                        : 'UNAUTHORIZED'}
+                    </span>
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="op-identity-row awaiting">
+                <div className="op-identity-icon-circle">
+                  <ScanFace size={19} />
+                </div>
+                <div className="op-identity-text">
+                  <div className="op-gear-name-line">
+                    <span className="op-gear-name">Face Recognition Check</span>
+                    {faceEnforced && <span className="op-mandatory-pill">REQUIRED</span>}
+                  </div>
+                  <span className="op-gear-standard">
+                    {enrolledFacesCount > 0
+                      ? `Matching against ${enrolledFacesCount} authorized worker ${enrolledFacesCount === 1 ? 'profile' : 'profiles'}`
+                      : '0 faces enrolled — click Worker Directory above to scan worker face'}
+                  </span>
+                </div>
+                <div className="op-gear-verdict">
+                  <span className="op-status-badge awaiting">Awaiting</span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 3. MANDATORY GEAR CHECKLIST MATRIX (100% Intact) */}
           <div className="op-checklist-card">
             <div className="op-checklist-header">
               <span className="op-checklist-title">MANDATORY SAFETY GEAR CHECKLIST</span>
@@ -894,7 +1126,7 @@ export default function ScannerTab({ onNavigateTab }) {
             </div>
           </div>
 
-          {/* 3. PHYSICAL GATE & ARDUINO HARDWARE TELEMETRY STRIP */}
+          {/* 4. PHYSICAL GATE & ARDUINO HARDWARE TELEMETRY STRIP */}
           <div className="op-hardware-strip">
             <div className="op-hw-box">
               <div className="op-hw-icon-col">

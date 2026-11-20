@@ -67,9 +67,10 @@ export default function PortalLayout({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 3 Primary Operational Views for Entrance Gate Operator
+  // Primary Operational Views for Entrance Gate Operator
   const primaryTabs = [
     { id: 'scanner', label: 'Gate Scanner', icon: <Camera size={16} /> },
+    { id: 'staff', label: 'Worker Directory', icon: <UserCheck size={16} /> },
     { id: 'logs', label: 'Access Ledger', icon: <Layers size={16} /> },
     { id: 'hardware', label: 'Digital Twin', icon: <Cpu size={16} /> },
   ];
@@ -77,7 +78,6 @@ export default function PortalLayout({
   // Secondary Administrative & Configuration Tools (tucked into dropdown to prevent clutter)
   const secondaryTabs = [
     { id: 'settings', label: 'Gear Thresholds', icon: <Sliders size={15} /> },
-    { id: 'staff', label: 'Staff Directory', icon: <UserCheck size={15} /> },
     { id: 'guides', label: 'Safety Guidelines', icon: <FileText size={15} /> },
   ];
 
@@ -294,7 +294,7 @@ export default function PortalLayout({
           <GearConfigTab />
         )}
         {activeTab === 'staff' && (
-          <StaffDirectoryTab />
+          <StaffDirectoryTab onNavigateTab={handleSelectTab} />
         )}
         {activeTab === 'guides' && (
           <SafetyGuidesTab />

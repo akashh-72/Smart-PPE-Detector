@@ -7,12 +7,12 @@ import {
   CheckCircle2, 
   AlertTriangle, 
   Search, 
-  Filter, 
-  Calendar, 
   Clock, 
   Eye, 
   X,
-  HardHat
+  UserCheck,
+  UserX,
+  ScanFace
 } from 'lucide-react';
 import { getLogs, clearLogs, getStats } from '../../../services/apiService';
 
@@ -61,11 +61,19 @@ export default function AuditLogsTab() {
       (filterStatus === 'GRANTED' && (log.status === 'GRANTED' || log.status === 'PASSED' || log.is_compliant)) ||
       (filterStatus === 'DENIED' && (log.status === 'DENIED' || log.status === 'REJECTED' || !log.is_compliant));
 
+    const q = searchQuery.toLowerCase();
+    const missingStr = Array.isArray(log.missing_items)
+      ? log.missing_items.join(', ')
+      : String(log.missing_items || '');
+
     const matchesSearch = 
-      !searchQuery ||
-      (log.timestamp && log.timestamp.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (log.status && log.status.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (log.missing_items && log.missing_items.toLowerCase().includes(searchQuery.toLowerCase()));
+      !q ||
+      (log.timestamp && log.timestamp.toLowerCase().includes(q)) ||
+      (log.status && log.status.toLowerCase().includes(q)) ||
+      (log.worker_name && log.worker_name.toLowerCase().includes(q)) ||
+      (log.employee_id && log.employee_id.toLowerCase().includes(q)) ||
+      (log.face_status && log.face_status.toLowerCase().includes(q)) ||
+      missingStr.toLowerCase().includes(q);
 
     return matchesFilter && matchesSearch;
   });
@@ -76,9 +84,9 @@ export default function AuditLogsTab() {
       {/* Top Welcome Header */}
       <div className="portal-welcome-header">
         <div className="portal-welcome-left">
-          <h1>Access Audit &amp; Compliance Ledger</h1>
+          <h1>Access Audit &amp; Biometric Ledger</h1>
           <p>
-            Persistent SQLite audit trail of all site entry events, worker snapshots, confidence scores, and safety compliance breakdowns.
+            Persistent SQLite audit trail of all site entry events, worker face identities, annotated snapshots, and PPE compliance breakdowns.
           </p>
         </div>
 
@@ -105,28 +113,28 @@ export default function AuditLogsTab() {
       <div className="audit-metrics-row">
         <div className="audit-stat-box">
           <span className="stat-label">TOTAL VERIFICATIONS</span>
-          <span className="stat-number">{stats.total_scans || logs.length}</span>
+          <span className="stat-number">{stats.total_scans ?? logs.length}</span>
           <span className="stat-detail">Lifetime gate scans</span>
         </div>
 
         <div className="audit-stat-box">
           <span className="stat-label">ACCESS GRANTED</span>
-          <span className="stat-number text-emerald">{stats.granted || 0}</span>
-          <span className="stat-detail">Compliant entrances</span>
+          <span className="stat-number text-emerald">{stats.granted ?? stats.granted_scans ?? 0}</span>
+          <span className="stat-detail">Authorized &amp; PPE compliant</span>
         </div>
 
         <div className="audit-stat-box">
           <span className="stat-label">BREACHES BLOCKED</span>
-          <span className="stat-number text-danger">{stats.denied || 0}</span>
-          <span className="stat-detail">Gate lockdown events</span>
+          <span className="stat-number text-danger">{stats.denied ?? stats.denied_scans ?? 0}</span>
+          <span className="stat-detail">PPE or unauthorized face</span>
         </div>
 
         <div className="audit-stat-box">
           <span className="stat-label">COMPLIANCE PASS RATE</span>
           <span className="stat-number text-electric">
-            {stats.compliance_rate ? `${stats.compliance_rate}%` : '98.7%'}
+            {stats.compliance_rate !== undefined ? `${stats.compliance_rate}%` : '100%'}
           </span>
-          <span className="stat-detail">OSHA standard benchmark</span>
+          <span className="stat-detail">OSHA &amp; Face ID benchmark</span>
         </div>
       </div>
 
@@ -160,7 +168,7 @@ export default function AuditLogsTab() {
             <Search size={15} className="search-icon" />
             <input 
               type="text" 
-              placeholder="Search by missing item, time..."
+              placeholder="Search worker name, badge ID, missing gear..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -186,10 +194,10 @@ export default function AuditLogsTab() {
                 <th>ID</th>
                 <th>Snapshot</th>
                 <th>Timestamp</th>
+                <th>Worker Identity</th>
                 <th>Status</th>
-                <th>Compliance %</th>
-                <th>Missing Gear</th>
-                <th>Avg Conf</th>
+                <th>PPE %</th>
+                <th>Violation / Gear</th>
                 <th>Latency</th>
               </tr>
             </thead>
@@ -200,6 +208,12 @@ export default function AuditLogsTab() {
                   const snapshotSrc = item.image_filename 
                     ? `/data/captures/${item.image_filename}` 
                     : null;
+                  const fStatus = item.face_status || '';
+                  const missingArr = Array.isArray(item.missing_items)
+                    ? item.missing_items
+                    : typeof item.missing_items === 'string' && item.missing_items !== '[]' && item.missing_items !== ''
+                    ? item.missing_items.replace(/[\[\]"']/g, '').split(',').map((s) => s.trim()).filter(Boolean)
+                    : [];
 
                   return (
                     <tr key={item.id || item.timestamp}>
@@ -232,6 +246,35 @@ export default function AuditLogsTab() {
                       </td>
 
                       <td>
+                        {fStatus === 'AUTHORIZED' ? (
+                          <div className="audit-worker-cell authorized">
+                            <UserCheck size={13} />
+                            <div>
+                              <strong>{item.worker_name || 'Authorized Worker'}</strong>
+                              {item.employee_id && <span>{item.employee_id}</span>}
+                            </div>
+                          </div>
+                        ) : fStatus === 'UNAUTHORIZED' ? (
+                          <span className="audit-unauth-pill">
+                            <UserX size={12} />
+                            <span>Unauthorized Person</span>
+                          </span>
+                        ) : fStatus === 'SUSPENDED' ? (
+                          <span className="audit-unauth-pill">
+                            <UserX size={12} />
+                            <span>Suspended: {item.worker_name}</span>
+                          </span>
+                        ) : fStatus === 'NO_FACE' ? (
+                          <span className="audit-noface-pill">
+                            <ScanFace size={12} />
+                            <span>Face Not Visible</span>
+                          </span>
+                        ) : (
+                          <span className="audit-noface-pill">{item.worker_name || 'Standard Scan'}</span>
+                        )}
+                      </td>
+
+                      <td>
                         <span className={`audit-verdict-pill ${isGranted ? 'granted' : 'denied'}`}>
                           {isGranted ? <CheckCircle2 size={12} /> : <AlertTriangle size={12} />}
                           <span>{isGranted ? 'GRANTED' : 'DENIED'}</span>
@@ -240,26 +283,26 @@ export default function AuditLogsTab() {
 
                       <td>
                         <span className="compliance-pct-cell">
-                          {item.compliance_pct !== undefined ? `${item.compliance_pct}%` : '100%'}
+                          {item.compliance_pct !== undefined
+                            ? `${item.compliance_pct}%`
+                            : item.compliance_percentage !== undefined
+                            ? `${item.compliance_percentage}%`
+                            : '100%'}
                         </span>
                       </td>
 
                       <td>
-                        {item.missing_items && item.missing_items !== '[]' && item.missing_items !== '' ? (
+                        {missingArr.length > 0 ? (
                           <span className="missing-items-badge">
-                            {typeof item.missing_items === 'string' 
-                              ? item.missing_items.replace(/[\[\]"']/g, '') 
-                              : item.missing_items.join(', ')}
+                            Missing: {missingArr.join(', ')}
                           </span>
+                        ) : fStatus === 'UNAUTHORIZED' ? (
+                          <span className="missing-items-badge">Unregistered Face</span>
+                        ) : fStatus === 'NO_FACE' ? (
+                          <span className="missing-items-badge">Face Obscured</span>
                         ) : (
-                          <span className="none-missing-tag">All Required Verified</span>
+                          <span className="none-missing-tag">All Gear Verified</span>
                         )}
-                      </td>
-
-                      <td>
-                        <span className="confidence-num">
-                          {item.avg_confidence ? `${item.avg_confidence}%` : '98.5%'}
-                        </span>
                       </td>
 
                       <td>
@@ -276,7 +319,7 @@ export default function AuditLogsTab() {
                     <div className="empty-audit-state">
                       <Layers size={36} color="#94A3B8" />
                       <h4>No Audit Records Found</h4>
-                      <p>Run a verification scan from the Live Vision Gateway or Scenario Benchmarks to record entries.</p>
+                      <p>Run a verification scan from the Gate Scanner or Simulated Workers to record entries.</p>
                     </div>
                   </td>
                 </tr>

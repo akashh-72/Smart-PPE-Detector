@@ -3019,3 +3019,674 @@
   }
 }
 
+
+/* ==========================================================================
+   BIOMETRIC FACE RECOGNITION & WORKER ENROLLMENT EXTENSIONS
+   ========================================================================== */
+
+/* Scanner Tab - Biometric Identity Card & Denied Actions */
+.op-verdict-actions-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.op-verdict-actions-row .op-rescan-btn {
+  margin-top: 0;
+}
+
+.op-enroll-shortcut-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: #FFFFFF;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.58rem 1.1rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.op-enroll-shortcut-btn:hover {
+  background: rgba(15, 23, 42, 0.55);
+  transform: translateY(-1px);
+}
+
+.op-identity-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-xl);
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+}
+
+.op-manage-faces-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #FF5E14;
+  background: #FFF7ED;
+  border: 1px solid #FFEDD5;
+  padding: 0.22rem 0.65rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.op-manage-faces-link:hover {
+  background: #FFEDD5;
+}
+
+.op-identity-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-md);
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.op-identity-row.authorized {
+  background: #ECFDF5;
+  border-color: #6EE7B7;
+}
+
+.op-identity-row.unauthorized {
+  background: #FEF2F2;
+  border-color: #FCA5A5;
+}
+
+.op-identity-row.no-face {
+  background: #FFFBEB;
+  border-color: #FCD34D;
+}
+
+.op-identity-avatar-img {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #10B981;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+.op-identity-icon-circle {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.op-identity-row.authorized .op-identity-icon-circle {
+  color: #059669;
+}
+
+.op-identity-row.unauthorized .op-identity-icon-circle {
+  color: #DC2626;
+}
+
+.op-identity-row.no-face .op-identity-icon-circle {
+  color: #D97706;
+}
+
+.op-identity-text {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+/* Worker Directory - Biometric Cards & Enrollment Modal */
+.staff-header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.staff-biometric-summary-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 0.28rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.staff-toast-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: #ECFDF5;
+  border: 1px solid #6EE7B7;
+  color: #065F46;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.staff-toast-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.staff-toast-goto-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #059669;
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.42rem 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.staff-toast-goto-btn:hover {
+  background: #047857;
+}
+
+.staff-filter-sep {
+  color: #CBD5E1;
+  font-size: 0.85rem;
+  margin: 0 0.15rem;
+}
+
+.worker-avatar-photo-wrap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+}
+
+.worker-avatar-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid #10B981;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.22);
+}
+
+.worker-face-verified-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #10B981;
+  color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.worker-biometric-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.worker-face-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+}
+
+.worker-face-pill.enrolled {
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
+}
+
+.worker-face-pill.pending {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
+.worker-clear-face-link {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94A3B8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.15rem 0.35rem;
+}
+
+.worker-clear-face-link:hover {
+  color: #EF4444;
+  text-decoration: underline;
+}
+
+.worker-scan-face-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.worker-scan-face-btn.primary {
+  background: linear-gradient(135deg, #FF5E14 0%, #EA580C 100%);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 3px 10px rgba(255, 94, 20, 0.28);
+}
+
+.worker-scan-face-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(255, 94, 20, 0.38);
+}
+
+.worker-scan-face-btn.update {
+  background: #FFF7ED;
+  color: #EA580C;
+  border: 1px solid #FED7AA;
+}
+
+.worker-scan-face-btn.update:hover {
+  background: #FFEDD5;
+}
+
+.worker-footer-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* Biometric Modal & Live Camera Widget */
+.biometric-modal-wide {
+  max-width: 680px !important;
+  max-height: 90vh;
+  overflow-y: auto !important;
+}
+
+.modal-emp-code {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.ppe-select-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.ppe-select-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.38rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ppe-select-pill.selected {
+  background: #FFF7ED;
+  border-color: #FF5E14;
+  color: #EA580C;
+}
+
+.biometric-capture-box {
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--radius-lg);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.biometric-capture-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.biometric-capture-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.biometric-capture-heading strong {
+  display: block;
+  font-size: 0.86rem;
+  color: #0F172A;
+}
+
+.biometric-capture-heading span {
+  display: block;
+  font-size: 0.72rem;
+  color: #64748B;
+}
+
+.biometric-capture-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.bio-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  padding: 0.42rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.bio-mode-btn:hover {
+  border-color: #FF5E14;
+  color: #FF5E14;
+}
+
+.bio-mode-btn.active {
+  background: #FFF7ED;
+  border-color: #FF5E14;
+  color: #EA580C;
+}
+
+.bio-webcam-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 290px;
+  background: #0F172A;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bio-webcam-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bio-face-oval-guide {
+  position: absolute;
+  width: 150px;
+  height: 190px;
+  border: 2px dashed rgba(52, 211, 153, 0.85);
+  border-radius: 50% / 46%;
+  box-shadow: 0 0 0 999px rgba(15, 23, 42, 0.28);
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bio-guide-caption {
+  position: absolute;
+  bottom: -24px;
+  white-space: nowrap;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+}
+
+.bio-webcam-controls {
+  position: absolute;
+  bottom: 0.7rem;
+  left: 0.7rem;
+  right: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 5;
+}
+
+.bio-capture-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #FF5E14 0%, #EA580C 100%);
+  color: #FFFFFF;
+  font-size: 0.82rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 94, 20, 0.45);
+}
+
+.bio-capture-trigger-btn:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.bio-flip-cam-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.8);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.bio-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #B91C1C;
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.bio-samples-strip {
+  background: #FFFFFF;
+  border: 1px solid #A7F3D0;
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+}
+
+.bio-samples-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.bio-samples-ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.bio-samples-hint {
+  font-size: 0.7rem;
+  color: #64748B;
+}
+
+.bio-samples-list {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.bio-sample-thumb-card {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #10B981;
+}
+
+.bio-sample-thumb-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bio-sample-conf {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  text-align: center;
+  background: rgba(5, 150, 105, 0.88);
+  color: #FFFFFF;
+  font-size: 0.6rem;
+  font-weight: 800;
+  border-radius: 4px;
+}
+
+.bio-sample-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.78);
+  color: #FFFFFF;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.bio-empty-prompt {
+  text-align: center;
+  padding: 0.65rem;
+  font-size: 0.78rem;
+  color: #64748B;
+  background: #FFFFFF;
+  border: 1px dashed #CBD5E1;
+  border-radius: var(--radius-md);
+}
+
+.bio-replace-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8rem;
+  color: #475569;
+  cursor: pointer;
+}
+
+/* Audit Ledger Worker Identity Cells */
+.audit-worker-cell.authorized {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #059669;
+}
+
+.audit-worker-cell.authorized strong {
+  display: block;
+  font-size: 0.82rem;
+  color: #0F172A;
+}
+
+.audit-worker-cell.authorized span {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.audit-unauth-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+  padding: 0.22rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.audit-noface-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #64748B;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

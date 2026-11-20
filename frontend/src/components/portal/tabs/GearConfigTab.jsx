@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Sliders, 
-  ShieldCheck, 
   HardHat, 
   Save, 
   RotateCcw, 
-  Clock, 
-  Volume2, 
-  CheckCircle2, 
-  AlertCircle 
+  CheckCircle2,
+  ScanFace
 } from 'lucide-react';
 import { getConfig, updateConfig, resetHardware } from '../../../services/apiService';
 import { PPE_ITEMS_CATALOG } from '../../../data/mockData';
@@ -22,6 +18,8 @@ export default function GearConfigTab() {
     gloves: 0.55,
     shoes: 0.55
   });
+  const [requireFaceAuth, setRequireFaceAuth] = useState(true);
+  const [faceThreshold, setFaceThreshold] = useState(0.38);
   const [gateHoldDuration, setGateHoldDuration] = useState(5);
   const [isSaving, setIsSaving] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
@@ -31,6 +29,8 @@ export default function GearConfigTab() {
       .then((data) => {
         if (data.required_items) setRequiredItems(data.required_items);
         if (data.thresholds) setThresholds((prev) => ({ ...prev, ...data.thresholds }));
+        if (typeof data.require_face_auth === 'boolean') setRequireFaceAuth(data.require_face_auth);
+        if (typeof data.face_threshold === 'number') setFaceThreshold(data.face_threshold);
       })
       .catch((err) => console.error("Error loading config:", err));
   }, []);
@@ -60,9 +60,11 @@ export default function GearConfigTab() {
     try {
       await updateConfig({
         required_items: requiredItems,
-        thresholds: thresholds
+        thresholds: thresholds,
+        require_face_auth: requireFaceAuth,
+        face_threshold: faceThreshold
       });
-      setToastMsg('Safety parameters successfully updated and active on gateway.');
+      setToastMsg('Safety & Biometric Face ID parameters updated and active on gateway.');
       setTimeout(() => setToastMsg(''), 3500);
     } catch (err) {
       alert("Failed to save configuration: " + err.message);
@@ -80,10 +82,18 @@ export default function GearConfigTab() {
       gloves: 0.55,
       shoes: 0.55
     });
+    setRequireFaceAuth(true);
+    setFaceThreshold(0.38);
     setGateHoldDuration(5);
     try {
+      await updateConfig({
+        required_items: ['helmet', 'vest'],
+        thresholds: { helmet: 0.60, vest: 0.60, mask: 0.55, gloves: 0.55, shoes: 0.55 },
+        require_face_auth: true,
+        face_threshold: 0.38
+      });
       await resetHardware();
-      setToastMsg('Hardware reset to STANDBY default state.');
+      setToastMsg('Gateway parameters and hardware reset to STANDBY defaults.');
       setTimeout(() => setToastMsg(''), 3000);
     } catch (err) {
       console.warn("Reset error:", err);
@@ -96,9 +106,9 @@ export default function GearConfigTab() {
       {/* Top Welcome Header */}
       <div className="portal-welcome-header">
         <div className="portal-welcome-left">
-          <h1>Safety Gear &amp; Gateway Configuration</h1>
+          <h1>Safety Gear &amp; Biometric Gateway Configuration</h1>
           <p>
-            Dynamically customize mandatory PPE gear checklists, neural network confidence thresholds, and barrier gate timing parameters.
+            Dynamically customize mandatory PPE gear checklists, biometric face recognition enforcement, and neural confidence thresholds.
           </p>
         </div>
 
@@ -121,8 +131,52 @@ export default function GearConfigTab() {
       )}
 
       <form onSubmit={handleSaveConfig} className="config-form-layout">
+
+        {/* 1. Biometric Face Authorization Policy */}
+        <div className="config-card">
+          <div className="card-header-row">
+            <div>
+              <span className="card-kicker">BIOMETRIC IDENTITY VERIFICATION</span>
+              <h3 className="card-title">Worker Face Recognition Gate Check</h3>
+            </div>
+            <span className="config-active-count-tag">
+              {requireFaceAuth ? 'BIOMETRIC ACTIVE' : 'PPE ONLY MODE'}
+            </span>
+          </div>
+
+          <p className="config-section-desc">
+            When enabled, the gate verifies both mandatory PPE gear AND checks that the worker&apos;s face matches an authorized profile in the Worker Directory.
+          </p>
+
+          <div className="config-toggles-grid">
+            <div
+              className={`config-toggle-item-card ${requireFaceAuth ? 'active' : ''}`}
+              onClick={() => setRequireFaceAuth((prev) => !prev)}
+              role="button"
+              tabIndex={0}
+            >
+              <div className="toggle-card-top">
+                <div className="toggle-icon-wrap">
+                  <ScanFace size={20} color={requireFaceAuth ? '#FF5E14' : '#64748B'} />
+                </div>
+                <div className={`custom-switch ${requireFaceAuth ? 'on' : 'off'}`}>
+                  <div className="switch-knob"></div>
+                </div>
+              </div>
+
+              <div className="toggle-card-body">
+                <span className="toggle-item-title">Require Authorized Worker Face ID</span>
+                <span className="toggle-item-sub">128-D OpenCV YuNet + SFace Biometric Engine</span>
+              </div>
+
+              <span className={`toggle-policy-badge ${requireFaceAuth ? 'required' : 'optional'}`}>
+                {requireFaceAuth ? 'BLOCK UNAUTHORIZED PERSONS' : 'BYPASS FACE CHECK'}
+              </span>
+            </div>
+          </div>
+        </div>
         
-        {/* 1. Mandatory PPE Checklist Matrix */}
+        {/* 2. Mandatory PPE Checklist Matrix */}
         <div className="config-card">
           <div className="card-header-row">
             <div>
@@ -172,20 +226,44 @@ export default function GearConfigTab() {
           </div>
         </div>
 
-        {/* 2. Neural Confidence Thresholds & Timing */}
+        {/* 3. Neural Confidence Thresholds & Timing */}
         <div className="config-card">
           <div className="card-header-row">
             <div>
-              <span className="card-kicker">EDGE YOLOv8 NEURAL TUNING</span>
+              <span className="card-kicker">EDGE NEURAL TUNING</span>
               <h3 className="card-title">Confidence Sliders &amp; Gate Hold Timing</h3>
             </div>
           </div>
 
           <p className="config-section-desc">
-            Fine-tune minimum detection probabilities required before marking an item compliant.
+            Fine-tune minimum detection probabilities required before marking PPE or biometric identity compliant.
           </p>
 
           <div className="thresholds-sliders-stack">
+            {/* Face Match Similarity Slider */}
+            <div className="threshold-slider-row">
+              <div className="slider-label-col">
+                <strong>Face Recognition Cosine Threshold</strong>
+                <span>SFace Biometric Strictness (0.38 recommended)</span>
+              </div>
+
+              <div className="slider-input-col">
+                <input
+                  type="range"
+                  min="0.28"
+                  max="0.60"
+                  step="0.02"
+                  value={faceThreshold}
+                  onChange={(e) => setFaceThreshold(parseFloat(e.target.value))}
+                  className="range-slider-control"
+                />
+              </div>
+
+              <div className="slider-value-col">
+                <span className="pct-badge">{faceThreshold.toFixed(2)}</span>
+              </div>
+            </div>
+
             {PPE_ITEMS_CATALOG.map((item) => {
               const currentVal = thresholds[item.id] !== undefined ? thresholds[item.id] : 0.60;
               const pct = Math.round(currentVal * 100);
